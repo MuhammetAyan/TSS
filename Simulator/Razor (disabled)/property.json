@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "indexTest.html",
+    "css": ["bootstrap.min.css", "style.css"],
+    "body": "index.html",
+    "app": {
+      "Name": "TSS Menü"
+    },
+    "script": ["graph.js"]
+  }
+]

@@ -1,0 +1,14 @@
+.phone{
+    background-image: url("../media/phone.png");
+    background-repeat: no-repeat;
+    width: 260px;
+    height:534px;
+    padding-top:57px;
+    padding-left:9px;
+    padding-right:13px;
+    padding-bottom:51px;
+}
+
+.phone-background{
+    background-color: #aaa;
+}
