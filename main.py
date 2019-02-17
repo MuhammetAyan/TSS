@@ -3,4 +3,4 @@ from Network.runserver import runserver
 from Controllers.testController import *
 
 
-runserver("localhost", 10000)
+runserver("localhost", 8080)
