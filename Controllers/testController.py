@@ -1,5 +1,4 @@
 from Network.bottle import *
-from Simulator.Razor.razor import razor
 
 #@route('/')
 #def index():
