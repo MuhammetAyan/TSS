@@ -1,13 +1,13 @@
 import pyodbc
 from Data.DbTestModel import *
 cnxn = pyodbc.connect("Driver={SQL Server};"
-                      "Server=.;"
-                      "Database=testDB;"
+                      "Server=(local);"
+                      "Database=TSSDB;"
                       "Trusted_Connection=yes;"
                       "User Id=user;"
                       "Password=12345678;"
                       )
-"""Provider=SQLOLEDB.1;Password=12345678;Persist Security Info=True;User ID=user;Initial Catalog=testDB;Data Source=."""
+"""Provider=SQLOLEDB.1;Password=12345678;Persist Security Info=True;User ID=user;Initial Catalog=TSSDB;Data Source=(local)"""
 # cursor.execute('CREATE TABLE Test1(id int, name varchar(50));')
 # cursor.execute("DROP TABLE Test1;")
 
