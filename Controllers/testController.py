@@ -10,12 +10,9 @@ from Network.bottle import *
 @route('/')
 @route('/<filename>')
 def html(filename="index"):
-    print("a")
     if not filename.__contains__("."):
-        print(filename)
         return static_file(filename + ".html", root="./Simulator")
     else:
-        print("c")
         return static_file(filename, root="./Simulator")
 
 
