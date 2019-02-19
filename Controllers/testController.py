@@ -33,8 +33,8 @@ def js(filename):
 
 @post('/login')
 def login():
-    username = request.forms.get('username')
-    password = request.forms.get('pass')
+    username = request.json.get('username')
+    password = request.json.get('pass')
     if username == 'Muhammet' and password == '1234':
         response.set_cookie("account", username, secret='some-secret-key')
         return template("""<p>Hoşgeldin {{name}}! <a href="/menu">Menüye git</a></p>""", name=username)

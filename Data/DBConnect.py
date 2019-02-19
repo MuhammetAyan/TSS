@@ -1,5 +1,5 @@
 import pyodbc
-from DBModels import *
+from Data.DBModels import *
 cnxn = pyodbc.connect("Driver={SQL Server};"
                       "Server=(local);"
                       "Database=TSSDB;"
@@ -11,12 +11,14 @@ cnxn = pyodbc.connect("Driver={SQL Server};"
 # cursor.execute('CREATE TABLE Test1(id int, name varchar(50));')
 # cursor.execute("DROP TABLE Test1;")
 
+
 # insert ,update işlemleri için
 def query(sql: str):
     cursor = cnxn.cursor()
     cursor.execute(sql)
     cnxn.commit()  # değişiklikleri kaydediyor.
     cursor.close()
+
 
  # select işlemleri için
 def select(sql: str):
@@ -39,8 +41,8 @@ def select(sql: str):
     return result
 
 
+"""
 x= select("select * from Kullanicilar" )
 for i in x:
     print(i.KullaniciAdi)
-
-
+"""

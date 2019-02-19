@@ -8,7 +8,7 @@
 </head>
 <body>
     <div class="phone mx-auto">
-        <div class="container-fluid bg-secondary text-light h-100">
+        <div class="container-fluid bg-secondary text-light h-100" ng-app="app" ng-controller="menu">
             <div class="row">
                 <div class="col-12 bg-success text-light p-2">TSS Menü</div>
             </div>
@@ -32,8 +32,13 @@
                     Strateji Belirle
                 </a>
             </div>
+            <div class="row justify-content-around text-center">
+                <div class="btn btn-danger col-12 shadow" ng-click="logout()">Çıkış Yap</div>
+            </div>
         </div>
     </div>
     <script src="../static/js/graph.js"></script>
+    <script src="../static/js/angular.min.js"></script>
+    <script src="../static/js/menu.js"></script>
 </body>
 </html>
