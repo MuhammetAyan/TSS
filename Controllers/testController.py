@@ -1,44 +1,49 @@
 from Network.bottle import *
 
+test = 0
+print("testController")
 
 #@route('/')
 #def index():
-#    f = open("./Simulator/index.html", "r", encoding="utf8")
+#    f = open("./Simulator/login.html", "r", encoding="utf8")
 #    text = f.read()
 #    return text
 
-
 @route('/')
-@route('/<filename>')
-def html(filename="index"):
-    if not filename.__contains__("."):
-        return static_file(filename + ".html", root="./Simulator")
-    else:
-        return static_file(filename, root="./Simulator")
+@route('/test/<filename>')
+def html(filename="login"):
+    print("Şu dosya okundu:", filename)
+    if filename == "index":
+        return """<script>window.location = "/test/login";</script>"""
+    return static_file(filename + ".html", root="./Simulator")
 
 
 @route('/static/media/<filename>')
 def media(filename):
+    print("media:", filename)
     return static_file(filename, root="./Simulator/static/media")
 
 
 @route('/static/css/<filename>')
 def css(filename):
+    print("css", filename)
     return static_file(filename, root="./Simulator/static/css")
 
 
 @route('/static/js/<filename>')
 def js(filename):
+    print("js:", filename)
     return static_file(filename, root="./Simulator/static/js")
 
 
+"""
 @post('/login')
 def login():
     username = request.json.get('username')
     password = request.json.get('pass')
     if username == 'Muhammet' and password == '1234':
         response.set_cookie("account", username, secret='some-secret-key')
-        return template("""<p>Hoşgeldin {{name}}! <a href="/menu">Menüye git</a></p>""", name=username)
+        return template("<p>Hoşgeldin {{name}}! <a href="/menu">Menüye git</a></p>", name=username)
     else:
         return "<p>Login failed.</p>"
 
@@ -55,9 +60,11 @@ def restricted_area():
         return template("Hello {{name}}. Welcome back.", name=username)
     else:
         return "You are not logged in. Access denied."
+"""
 
 
 @error(404)
 def error404(error):
+    print("error:", error)
     filename = "error"
     return static_file(filename + ".html", root="./Simulator")

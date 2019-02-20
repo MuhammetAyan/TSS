@@ -14,7 +14,7 @@
             </div>
             <div class="row">
                 <div class="col-12">
-                    <form metho="post" actio="../login" ng-app="app" ng-controller="login">
+                    <form ng-app="app" ng-controller="page">
                         <div class="form-group">
                             <label>Sunucu IP:</label>
                             <input class="form-control-sm" type="text" name="server" disabled>
@@ -25,21 +25,20 @@
                         </div>
                         <div class="form-group">
                             <label>Parola:</label>
-                            <input class="form-control-sm" type="password" name="pass" ng-model="pass">
+                            <input class="form-control-sm" type="password" name="password" ng-model="password">
                         </div>
                         <div class="form-group">
                             <input type="submit" class="btn btn-success" value="Giriş Yap" ng-click="submit()">
                         </div>
                         <div class="form-group">
-                            <p>{{info}}</p>
+                            <p class="text-info">{{info}}</p>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <script src="../static/js/graph.js"></script>
     <script src="../static/js/angular.min.js"></script>
-    <script src="../static/js/index.js"></script>
+    <script src="../static/js/login.js"></script>
 </body>
 </html>
