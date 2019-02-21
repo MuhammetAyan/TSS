@@ -1,4 +1,5 @@
 from Network.bottle import *
+from Business.AccountBusiness import LoginControl
 
 account = 0
 print("accountController")
@@ -9,13 +10,13 @@ def login():
     username = request.json.get('username')
     password = request.json.get('password')
     print("Kullanıcı adı şifre:", username, password)
-    if username == 'Muhammet' and password == '1234':
+    if LoginControl(username, password):
         response.set_cookie("account", username, secret='some-secret-key')
         print("Başarılı giriş!")
         return ""
     else:
         print("Hatalı giriş!")
-        return "Hatalı giriş yapma girişimi!"
+        return "Kullanıcı adı veya parola yanlış!"
 
 
 @route('/logout')
@@ -28,6 +29,6 @@ def log_out():
 def restricted_area():
     username = request.get_cookie("account", secret='some-secret-key')
     if username:
-        return "Veri"
+        return ""
     else:
         return "Yetkisiz erişim!"

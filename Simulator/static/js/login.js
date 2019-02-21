@@ -11,10 +11,13 @@ app.controller('page', function($scope, $http) {
               "Content-Type": "application/json",
               }
           }).then(function mySuccess(response) {
-                window.location = "/test/home";
-            $scope.info = response.data;
+                $scope.info = response.data;
+                if(response.data.length == 0)
+                {
+                    window.location = "/test/home";
+                }
           }, function myError(response) {
-            $scope.info = response.statusText;
+                $scope.info = response.statusText;
           });
 
 

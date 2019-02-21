@@ -61,7 +61,7 @@ function graph(rate=0){
     ct.fill();
     ct.stroke();
     var c = canvas.getContext("2d");
-    c.fillStyle="#ffffff";
+    c.fillStyle="#000000";
     c.font = "30px Arial";
     c.fillText("% " + oran, canvas.width / 2-40, canvas.height);
 }
