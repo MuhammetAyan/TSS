@@ -1,85 +1,86 @@
+import datetime
 
 
-class KriterAgirlik(object):
+class dbKriterAgirlikModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.StokKodu = data[1]
-		self.MaliyetPuan = data[2]
-		self.KalitePuan = data[3]
-		self.TeslimatPuan = data[4]
-		self.MemnuniyetPuan = data[5]
+		self.id : int = data[0]
+		self.StokKodu : str = data[1]
+		self.MaliyetPuan : float = data[2]
+		self.KalitePuan : float = data[3]
+		self.TeslimatPuan : float = data[4]
+		self.MemnuniyetPuan : float = data[5]
 
 
-class Kullanicilar(object):
+class dbKullanicilarModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.KullaniciAdi = data[1]
-		self.Sifre = data[2]
-		self.Rol = data[3]
+		self.id : int = data[0]
+		self.KullaniciAdi : str = data[1]
+		self.Sifre : str = data[2]
+		self.Rol : str = data[3]
 
 
-class MalKabul(object):
+class dbMalKabulModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.StokKodu = data[1]
-		self.TedarikciId = data[2]
-		self.MaliyetPuan = data[3]
-		self.KalitePuan = data[4]
-		self.TeslimatPuan = data[5]
-		self.MemnuniyetPuan = data[6]
-		self.Tarih = data[7]
+		self.id : int = data[0]
+		self.StokKodu : str = data[1]
+		self.TedarikciId : int = data[2]
+		self.MaliyetPuan : float = data[3]
+		self.KalitePuan : float = data[4]
+		self.TeslimatPuan : float = data[5]
+		self.MemnuniyetPuan : float = data[6]
+		self.Tarih : datetime.datetime = data[7]
 
 
-class Sonuclar(object):
+class dbSonuclarModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.StokKodu = data[1]
-		self.TedarikciId = data[2]
-		self.AHPPuan = data[3]
-		self.AHPUyumSirasi = data[4]
+		self.id : int = data[0]
+		self.StokKodu : str = data[1]
+		self.TedarikciId : int = data[2]
+		self.AHPPuan : float = data[3]
+		self.AHPUyumSirasi : object = data[4]
 
 
-class Tedarikci(object):
+class dbTedarikciModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.TedarikciAdi = data[1]
-		self.MemnuniyetPuani = data[2]
-		self.MemnuniyetAdedi = data[3]
-		self.TeslimatPuani = data[4]
-		self.TeslimatAdedi = data[5]
+		self.id : int = data[0]
+		self.TedarikciAdi : str = data[1]
+		self.MemnuniyetPuani : float = data[2]
+		self.MemnuniyetAdedi : float = data[3]
+		self.TeslimatPuani : float = data[4]
+		self.TeslimatAdedi : float = data[5]
 
 
-class TedarikUrunleri(object):
+class dbTedarikUrunleriModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.StokKodu = data[1]
-		self.TedarikciId = data[2]
-		self.BirimFiyat = data[3]
+		self.id : int = data[0]
+		self.StokKodu : str = data[1]
+		self.TedarikciId : int = data[2]
+		self.BirimFiyat : float = data[3]
 
 
-class UrunlerGruplar(object):
+class dbUrunlerGruplarModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.StokKodu = data[1]
-		self.GrupId = data[2]
-		self.DefaultTedId = data[3]
+		self.id : int = data[0]
+		self.StokKodu : str = data[1]
+		self.GrupId : int = data[2]
+		self.DefaultTedId : int = data[3]
 
 
-class UrunTedarikci(object):
+class dbUrunTedarikciModel(object):
 	def __init__(self, data: tuple):
-		self.id = data[0]
-		self.StokKodu = data[1]
-		self.TedarikciId = data[2]
-		self.MaliyetPuan = data[3]
-		self.MaliyetAdet = data[4]
-		self.KalitePuan = data[5]
-		self.KaliteAdet = data[6]
+		self.id : int = data[0]
+		self.StokKodu : str = data[1]
+		self.TedarikciId : int = data[2]
+		self.MaliyetPuan : float = data[3]
+		self.MaliyetAdet : float = data[4]
+		self.KalitePuan : float = data[5]
+		self.KaliteAdet : float = data[6]
 
 
-class sysdiagrams(object):
+class dbsysdiagramsModel(object):
 	def __init__(self, data: tuple):
-		self.name = data[0]
-		self.principal_id = data[1]
-		self.diagram_id = data[2]
-		self.version = data[3]
-		self.definition = data[4]
+		self.name : object = data[0]
+		self.principal_id : int = data[1]
+		self.diagram_id : int = data[2]
+		self.version : int = data[3]
+		self.definition : object = data[4]

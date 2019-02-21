@@ -1,4 +1,5 @@
 import pyodbc as db
+from  Data.DBModels import *
 
 cnxn = db.connect("Driver={SQL Server};"
                       "Server=(local);"
