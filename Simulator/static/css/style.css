@@ -12,6 +12,12 @@
 .phone-background{
     background-color: #ccc;
 }
+
+.group-map{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
 /*
 .message-ground{
     z-index: 1050! important;

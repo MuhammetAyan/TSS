@@ -10,41 +10,21 @@
     <div class="phone mx-auto">
         <div class="phone-background container-fluid h-100" style="background-color:#ccc;" ng-app="app" ng-controller="page">
             <div class="row">
-                <div class="col-12 bg-success text-light p-2">TSS Menü</div>
+                <div class="col-12 bg-success text-light p-2">Ürün Sorgula</div>
             </div>
-            <div class="row h-50">
-                <div class="col-12 text-center">
-                    <p>Tedarikçi Seçim Kalitesi</p>
-                    <canvas id="graph" class="w-100"></canvas>
+            <div class="row">
+                <div class="col-12 d-flex flex-row p-0 group-map">
+                    <a class="text-center text-light ml-1 mt-1 mb-1 p-1" ng-class="{'bg-success': group.strateji, 'bg-secondary': !group.strateji}" ng-repeat="group in groups" ng-href="/urunlerisorgula/{{group.id}}">{{group.name}}</a>
                 </div>
             </div>
             <div class="row justify-content-around text-dark text-center">
-                <a class="btn-light col-5 card shadow m-1" href="/test/tedarikcisorgula">
-                    Tedarikçi Sorgula
-                </a>
-                <a class="btn-light col-5 card shadow m-1" href="/test/urunsorgula">
-                    Ürün Sorgula
-                </a>
-                <a type="button" class="btn-light col-5 card shadow m-1" data-toggle="modal" data-target="#exampleModal" ng-click="hesapla()" href="#">
-                    Tümünü Hesapla
-                </a>
-                <!-- Modal -->
-                <div class="modal fade container h-75" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog row justify-content-around align-items-center h-75" role="document">
-                    <div class="modal-content col-4">
-                      <div class="modal-body">
-                        {{view}}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!--Modal sonu-->
-                <a class="btn-light col-5 card shadow m-1" href="/test/strateji">
-                    Strateji Belirle
-                </a>
+                <input class="form-control" type="search" ng-model="search" ng-keyup="getList(search)">
             </div>
-            <div class="row justify-content-around text-center">
-                <div class="btn btn-danger col-12 shadow" ng-click="logout()">Çıkış Yap</div>
+            <div class="list-group list-group-flush" style="height: 270px;">
+              <button type="button" class="list-group-item list-group-item-action" ng-repeat="item in list" ng-click="select(item)">{{item}}</button>
+            </div>
+            <div class="row justify-content-end">
+                <div class="btn btn-success" ng-click="submit()">Tamam</div>
             </div>
         </div>
     </div>
@@ -52,6 +32,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="../static/js/angular.min.js"></script>
-    <script src="../static/js/home.js"></script>
+    <script src="../static/js/urunsorgula.js"></script>
 </body>
 </html>

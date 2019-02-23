@@ -1,4 +1,5 @@
 from Network.bottle import *
+from Network.Security import *
 
 test = 0
 print("testController")
@@ -9,12 +10,16 @@ print("testController")
 #    text = f.read()
 #    return text
 
+
 @route('/')
 @route('/test/<filename>')
 def html(filename="login"):
     print("Şu dosya okundu:", filename)
     if filename == "index":
-        return """<script>window.location = "/test/login";</script>"""
+        if IsAllow(request, Roller.Misafir):
+            return """<script>window.location = "/test/login";</script>"""
+        else:
+            return """<script>window.location = "/test/home";</script>"""
     return static_file(filename + ".html", root="./Simulator")
 
 

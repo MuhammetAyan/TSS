@@ -1,5 +1,6 @@
-from Network.bottle import request, json_dumps, route
-import  time
+from Network.bottle import request, json_dumps, route, abort
+from Network.Security import *
+import time
 
 app = 0
 print("appController")
@@ -7,25 +8,31 @@ print("appController")
 
 @route('/hesapla')
 def hesapla():
-    print("hesaplama")
-    username = request.get_cookie("account", secret='some-secret-key')
-    if username:
-        print("hesapla başarılı erişim")
-        time.sleep(5)
-        return ""
+    if IsAllow(request, Roller.Admin):
+        print("hesaplama")
+        username = request.get_cookie("account", secret='some-secret-key')
+        if username:
+            print("hesapla başarılı erişim")
+            time.sleep(5)
+            return ""
+        else:
+            print("hesapla yetkisiz erişim!")
+            return "Yetkisiz erişim!"
     else:
-        print("hesapla yetkisiz erişim!")
-        return "Yetkisiz erişim!"
+        abort(code=500, text=ErrorText.get('500'))
 
 
 @route('/rate')
 def rate():
-    print("rate: ")
-    username = request.get_cookie("account", secret='some-secret-key')
-    print(username)
-    if username:
-        print(90)
-        return json_dumps({"rate": 90})
+    if IsAllow(request, Roller.TumHesaplar):
+        print("rate: ")
+        username = request.get_cookie("account", secret='some-secret-key')
+        print(username)
+        if username:
+            print(90)
+            return json_dumps({"rate": 90})
+        else:
+            print(10)
+            return json_dumps({"rate": 10})
     else:
-        print(10)
-        return json_dumps({"rate": 10})
+        abort(code=500, text=ErrorText.get('500'))
