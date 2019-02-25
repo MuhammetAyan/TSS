@@ -58,6 +58,16 @@ class dbTedarikUrunleriModel(object):
 		self.BirimFiyat: float = data[3]
 
 
+class dbUrunlerGruplarModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.GrupId: int = data[2]
+		self.DefaultTedId: int = data[3]
+		self.Urunmu: bool = data[4]
+		self.StokAdi: str = data[5]
+
+
 class dbUrunTedarikciModel(object):
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
@@ -67,20 +77,3 @@ class dbUrunTedarikciModel(object):
 		self.MaliyetAdet: float = data[4]
 		self.KalitePuan: float = data[5]
 		self.KaliteAdet: float = data[6]
-
-
-class dbsysdiagramsModel(object):
-	def __init__(self, data: tuple):
-		self.name: object = data[0]
-		self.principal_id: int = data[1]
-		self.diagram_id: int = data[2]
-		self.version: int = data[3]
-		self.definition: object = data[4]
-
-
-class dbUrunlerGruplarModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.GrupId: int = data[2]
-		self.DefaultTedId: int = data[3]
