@@ -26,7 +26,7 @@ class Rol:
 class Roller:
     Admin: Rol = Rol("admin")
     User: Rol = Rol("user")
-    Misafir: Rol = Rol()
+    Misafir: Rol = Rol("misafir")
     TumHesaplar: Rol = Admin + User
     Tumu: Rol = Admin + User + Misafir
 
@@ -39,6 +39,8 @@ def IsAllow(req: request, role: Rol):
     :return:
     """
     username = req.get_cookie("account", secret='some-secret-key')
+    if role.roles.__contains__(Roller.Misafir.roles[0]) and username == None:
+        return True
     users: list[dbKullanicilarModel] = select("select * from Kullanicilar where KullaniciAdi='{}'".format(username))
     if len(users) == 1:
         if role.roles.__contains__(users[0].Rol):

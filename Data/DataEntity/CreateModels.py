@@ -17,7 +17,7 @@ def CreateModels():
     def WriteAtt(attribute: str, i: int):
         global temp
         print(attribute[0] + ", ", end="")
-        temp += "\t\tself.{} : {} = data[{}]\n".format(attribute[0], FindType(attribute[1]), i)
+        temp += "\t\tself.{}: {} = data[{}]\n".format(attribute[0], FindType(attribute[1]), i)
 
     def FindType(dbTypeName: str):
         if dbTypeName.__contains__("char"):
