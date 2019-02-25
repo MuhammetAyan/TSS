@@ -2,7 +2,6 @@ from Network.bottle import request, json_dumps, route, abort
 from Network.Security import *
 import time
 
-app = 0
 print("appController")
 
 

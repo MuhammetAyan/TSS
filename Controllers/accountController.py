@@ -2,7 +2,6 @@ from Network.bottle import *
 from Business.AccountBusiness import LoginControl
 from Network.Security import *
 
-account = 0
 print("accountController")
 
 

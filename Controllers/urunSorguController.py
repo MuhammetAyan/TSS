@@ -2,7 +2,6 @@ from Network.bottle import *
 from Business.urunSorguBusiness import *
 from Network.Security import *
 
-test = 0
 print("urunSorguController")
 
 
@@ -14,3 +13,7 @@ def getlist(search):
     else:
         abort(code=500, text=ErrorText.get('500'))
 
+
+@route('/urunsorgula/sorgula/<urunKodu>')
+def sorgula(urunKodu):
+    return ""

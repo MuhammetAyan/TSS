@@ -1,7 +1,6 @@
 from Network.bottle import *
 from Network.Security import *
 
-test = 0
 print("testController")
 
 #@route('/')
