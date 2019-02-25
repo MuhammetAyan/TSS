@@ -3,6 +3,8 @@ app.controller('page', function($scope, $http) {
 
         $scope.list = [];
 
+        $scope.showPage = false;
+
         $scope.getList =  function(search){
           $http({
               method : "GET",
@@ -29,10 +31,11 @@ app.controller('page', function($scope, $http) {
 
         $scope.submit = function(){
             $http({
-                method : "POST",
-                url : "/urunsorgula/getlist/" + $scope.search,
+                method : "GET",
+                url : "/urunsorgula/sorgula/" + $scope.search,
             }).then(function mySuccess(response) {
-                window.location = "/urunsorgula1";
+                $scope.showPage = true;
+                //window.location = "/test/urunsorgula2";
             }, function myError(response) {
                 alert("Hata oluştu.");
             });
