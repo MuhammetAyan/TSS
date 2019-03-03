@@ -1,0 +1,28 @@
+POST /login
+INPUT FORMAT: {'username':'', 'password':''}
+OUTPUT FORMAT:
+
+GET /logout
+OUTPUT FORMAT: {}
+
+GET /urunsorgula/urunler/<arama>
+'arama' ile baþlayan ürün kodlarýný listeler.
+OUTPUT FORMAT: {}
+
+GET /urunsorgula/gruplar/<ustGrupid>
+Bir malzeme grubunun altýndaki malzeme gruplarýný listeler. En üst grubu görmek için <parentGrup> boþ býrakýlmalý.
+OUTPUT FORMAT: [{'id': '1', 'name': '', 'strateji': true}, ]
+
+GET /urunsorgula/sorgula/<urunKodu>
+Malum ürünü hangi tedarikçilerin sattýðý ve varsayýlan olarak hangisinden alýndýðý ve AHP puanlarý listelenir.
+OUTPUT FORMAT: ['StokKodu', ]
+
+GET /strateji/kriterler/<urunKodu>
+Malum ürünün kriter kýyaslama bilgileri getirilir.
+OUTPUT FORMAT: {}
+
+POST /strateji/belirle
+Malum ürün veya grup için strateji bilgilerini veritabanýna kaydet.
+INPUT FORMAT: {}
+OUTPUT FORMAT: {}
+
