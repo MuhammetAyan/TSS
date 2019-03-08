@@ -6,11 +6,11 @@ test = 0
 print("urunSorguController")
 
 
-@get('/urunsorgula/getlist/<search>')
-def getlist(search):
+@get('/urunsorgula/getlist/<grupId>/<search>')
+def getlist(grupId, search):
     if IsAllow(request, Roller.TumHesaplar):
         print("Urunsorgula getlist:", search)
-        return json_dumps(urunSorguBusiness.getList(search))
+        return json_dumps(urunSorguBusiness.getList(search, grupId))
     else:
         abort(code=500, text=ErrorText.get('500'))
 
