@@ -10,7 +10,7 @@ GET /urunsorgula/urunler/<arama>
 OUTPUT FORMAT: {}
 
 GET /urunsorgula/gruplar/<ustGrupid>
-Bir malzeme grubunun altýndaki malzeme gruplarýný listeler. En üst grubu görmek için <parentGrup> boþ býrakýlmalý.
+Bir malzeme grubunun altýndaki malzeme gruplarýný listeler. En üst grubu görmek için <ustGrupId> "0" býrakýlmalý.
 OUTPUT FORMAT: [{'id': '1', 'name': '', 'strateji': true}, ]
 
 GET /urunsorgula/sorgula/<urunKodu>

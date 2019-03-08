@@ -1,26 +1,36 @@
-liste = [('9789753424080', 'Greenberg', 'Sana Gül Bahçesi Vadetmedim', 'Metis'),
-         ('975872519X', 'Evren', 'Postmodern Bir Kız Sevdim', 'İthaki'),
-         ('9789754060409', 'Nietzsche', 'Böyle Buyurdu Zerdüşt', 'Cem')]
+class Property(object):
+    "Emulate PyProperty_Type() in Objects/descrobject.c"
 
-def sorgula(ölçüt=None, değer=None):
-    for li in liste:
-        if not ölçüt and not değer:
-            print(*li, sep=', ')
+    def __init__(self, fget=None, fset=None, fdel=None, doc=None):
+        self.fget = fget
+        self.fset = fset
+        self.fdel = fdel
+        if doc is None and fget is not None:
+            doc = fget.__doc__
+        self.__doc__ = doc
 
-        elif ölçüt == 'isbn':
-            if değer == li[0]:
-                print(*li, sep=', ')
+    def __get__(self, obj, objtype=None):
+        if obj is None:
+            return self
+        if self.fget is None:
+            raise AttributeError("unreadable attribute")
+        return self.fget(obj)
 
-        elif ölçüt == 'yazar':
-            if değer == li[1]:
-                print(*li, sep=', ')
+    def __set__(self, obj, value):
+        if self.fset is None:
+            raise AttributeError("can't set attribute")
+        self.fset(obj, value)
 
-        elif ölçüt == 'eser':
-            if değer == li[2]:
-                print(*li, sep=', ')
+    def __delete__(self, obj):
+        if self.fdel is None:
+            raise AttributeError("can't delete attribute")
+        self.fdel(obj)
 
-        elif ölçüt == 'yayınevi':
-            if değer == li[3]:
-                print(*li, sep=', ')
+    def getter(self, fget):
+        return type(self)(fget, self.fset, self.fdel, self.__doc__)
 
-sorgula()
+    def setter(self, fset):
+        return type(self)(self.fget, fset, self.fdel, self.__doc__)
+
+    def deleter(self, fdel):
+        return type(self)(self.fget, self.fset, fdel, self.__doc__)
