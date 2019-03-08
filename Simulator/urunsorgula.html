@@ -14,7 +14,21 @@
             </div>
             <div class="row">
                 <div class="col-12 d-flex flex-row p-0 group-map">
-                    <a class="text-center text-light ml-1 mt-1 mb-1 p-1" ng-class="{'bg-success': group.strateji, 'bg-secondary': !group.strateji}" ng-repeat="group in groups" ng-href="/urunlerisorgula/{{group.id}}">{{group.name}}</a>
+                    <a class="text-center text-light ml-1 mt-1 mb-1 p-1" ng-class="{'bg-info': group.strateji, 'bg-secondary': !group.strateji}" ng-repeat="group in groups" ng-click="swicth(group.id)">{{group.name}}</a>
+                    <a type="button" class="text-center text-light ml-1 mt-1 mb-1 p-1 bg-success" data-toggle="modal" data-target="#exampleModal" ng-click="getGruplar()" href="#">+</a>
+                    <!-- Modal -->
+                    <div class="modal fade container h-75" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog row justify-content-around align-items-center h-75" role="document">
+                        <div class="modal-content col-4">
+                          <div class="modal-body">
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="group in grouplist" ng-click="addGroup(group)">{{group.name}}</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!--Modal sonu-->
                 </div>
             </div>
             <div class="row justify-content-around text-dark text-center" ng-show="!showPage">

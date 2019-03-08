@@ -3,12 +3,15 @@ app.controller('page', function($scope, $http) {
 
         $scope.list = [];
 
+        $scope.groups = [ {'id': '0', 'name': '.', 'strateji': true}];
+
         $scope.showPage = false;
 
         $scope.getList =  function(search){
+          var groupId =$scope.groups[$scope.groups.length -1];
           $http({
               method : "GET",
-              url : "/urunsorgula/getlist/" + search,
+              url : "/urunsorgula/getlist/" + groupId + "/" + search,
           }).then(function mySuccess(response) {
                 $scope.list = response.data;
           }, function myError(response) {
@@ -22,12 +25,33 @@ app.controller('page', function($scope, $http) {
             $scope.search = item;
         }
 
-        $scope.groups = [
-            {'id': '1', 'name': '', 'strateji': true},
-            {'id': '2', 'name': 'Arabalar', 'strateji': false},
-            {'id': '3', 'name': 'Tekerlekler', 'strateji': true},
-            {'id': '4', 'name': 'Arka Tekerlek', 'strateji': false},
-        ];
+        $scope.grouplist = [];
+
+        $scope.getGruplar = function(){
+            $scope.grouplist.clear();
+            $http({
+                method : "GET",
+                url : "/urunsorgula/gruplar/" + $scope.groups[$scope.groups.length -1]['id'],
+            }).then(function mySuccess(response) {
+                $scope.groups.push(response.data)
+            }, function myError(response) {
+                alert("Hata oluştu.");
+            });
+        };
+
+        $scope.addGroup = function(group){
+            $scope.groups.push(group);
+        };
+
+        $scope.swicth = function(groupId){
+            for(var i = 0; i < $scope.groups.length; i++){
+                D = $scope.groups.pop();
+                if (D["id"] == groupId){
+                    $scope.groups.push(D);
+                    return;
+                }
+            }
+        };
 
         $scope.submit = function(){
             $http({

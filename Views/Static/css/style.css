@@ -1,0 +1,35 @@
+.phone{
+    background-image: url("../media/phone.png");
+    background-repeat: no-repeat;
+    width: 260px;
+    height:534px;
+    padding-top:57px;
+    padding-left:9px;
+    padding-right:13px;
+    padding-bottom:51px;
+}
+
+.phone-background{
+    background-color: #ccc;
+}
+
+.group-map{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+}
+/*
+.message-ground{
+    z-index: 1050! important;
+    margin: 0px;
+    width: 250px;
+    height: 427px;
+    background-color: rgba(0,0,0,.5);
+}
+
+.message{
+  text-align: center;
+  width: 75%;
+  max-width: 100%;
+}
+*/
