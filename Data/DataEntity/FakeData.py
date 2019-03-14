@@ -1,13 +1,31 @@
 from Data.DBConnect import select, query
 from Data.DBModels import *
 
-query("DELETE FROM Kullanicilar")
 
-query("INSERT Kullanicilar VALUES('Muhammet', '1234', 'admin')")
+def Create(liste: list, tabloadi: str):
+    print(tabloadi, ":")
+    query("DELETE FROM {}".format(tabloadi))
+    print("\tTüm veriler silindi.")
+    for element in liste:
+        query("INSERT {} VALUES{}".format(tabloadi, str(element)))
+    print("\tVeriler tekrar oluşturuldu.")
+    del liste
 
-query("DELETE FROM Tedarikci")
 
-query("INSERT Tedarikci VALUES('Rendecioğlu Holding', 100, 1, 100, 1)")
+kullanicilar = [
+    ('Muhammet', '1234', 'admin'),
+    ('User', '1234', 'user'),
+    ('Yunus', '1234', 'admin'),
+    ('İdris', '1234', 'admin'),
+]
+Create(kullanicilar, "Kullanicilar")
+
+
+tedarikciler = [
+    ('Rendecioğlu Holding', 100, 1, 100, 1),
+]
+Create(tedarikciler, "Tedarikci")
+
 
 query("DELETE FROM UrunlerGruplar")
 

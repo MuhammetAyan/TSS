@@ -2,7 +2,7 @@ from Data.DBConnect import select
 from Data.DBModels import dbKullanicilarModel
 
 
-def LoginControl(username: str, password: str):
+def FindLogin(username: str, password: str)->dbKullanicilarModel:
     """
     Verilen kullanıcı adı ve şifreye sahip veritabanında hesabın olup olmadığını kontrol eder.
     :param username: Kullanıcı adı
@@ -12,5 +12,8 @@ def LoginControl(username: str, password: str):
     users: list[dbKullanicilarModel] = select("select * from Kullanicilar where KullaniciAdi = '{}' and Sifre = '{}'".format(username, password))
     for user in users:
         print("Kullanicilar:", user)
-    return len(users) == 1
+    if len(users) == 1:
+        return users[0]
+    else:
+        return None
 

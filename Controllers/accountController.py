@@ -1,31 +1,43 @@
-from Network.bottle import *
-from Business.AccountBusiness import LoginControl
+from Network.bottle import * # route, post, static_file, response, json_dumps
+from Business.AccountBusiness import FindLogin, dbKullanicilarModel
 from Network.Security import *
 
 print("accountController")
 
 
-@post('/login')
+@route('/t/<filename>')
+def test(filename):
+    return static_file(filename, root="./Test/")
+
+
+@post('/account/login')
 def login():
     if IsAllow(request, Roller.Misafir):
+        print(request.forms.get('username'))
         username = request.json.get('username')
         password = request.json.get('password')
         print("Kullanıcı adı şifre:", username, password)
-        if LoginControl(username, password):
-            response.set_cookie("account", username, secret='some-secret-key')
-            print("Başarılı giriş!")
-            return ""
+        user = FindLogin(username, password)
+        if user is not None:
+            key = KeyGenerator()
+            UsersVarible(username=username, key=key, rol=Rol(user.Rol))#rol admin değil ayarlanması gerekiyor
+            response.set_cookie("account", key, secret='some-secret-key')
+            print("Başarılı giriş!", key)
+            return json_dumps({'auth': key})
         else:
             print("Hatalı giriş!")
-            return "Kullanıcı adı veya parola yanlış!"
+            UnauthorizedError("Kullanıcı adı veya parola yanlış!")
     else:
-        abort(code=500, text=ErrorText.get('500'))
+        UnauthorizedError()
 
 
-@route('/logout')
+@route('/account/logout')
 def log_out():
     if IsAllow(request, Roller.TumHesaplar):
         print("Çıkış yapıldı!")
         response.delete_cookie("account")
+        DeleteUser(request.get_header("auth"))
     else:
-        abort(code=500, text=ErrorText.get('500'))
+        UnauthorizedError()
+
+

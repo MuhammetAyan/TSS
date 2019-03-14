@@ -1,12 +1,10 @@
-from Network.bottle import request
+from Network.bottle import * #request, abort
 from Data.DBConnect import select
 from Data.DBModels import dbKullanicilarModel
+import secrets
+from threading import Thread, Event
 
-
-ErrorText = {
-    '500': 'Erişim yetkiniz yok!',
-}
-
+__UsersVaribles__ = []
 
 class Rol:
     def __init__(self, name: str = ""):
@@ -38,11 +36,85 @@ def IsAllow(req: request, role: Rol):
     :param role: Kullanıcı rolü
     :return:
     """
+    key = req.get_header("auth", "")
+    print("key:", "'" + key + "'")
+    if role.roles.__contains__(Roller.Misafir.roles[0]) and key == "":
+        print("Allow misafir")
+        return True
+    for user in __UsersVaribles__:
+        if user.key == key:
+            print(role.roles, user.rol.roles[0])
+            if role.roles.__contains__(user.rol.roles[0]):
+                print("Allow", key)
+                return True
+            else:
+                return False
+    return False
+"""
     username = req.get_cookie("account", secret='some-secret-key')
     if role.roles.__contains__(Roller.Misafir.roles[0]) and username == None:
         return True
+
     users: list[dbKullanicilarModel] = select("select * from Kullanicilar where KullaniciAdi='{}'".format(username))
     if len(users) == 1:
         if role.roles.__contains__(users[0].Rol):
             return True
     return False
+"""
+
+
+def UnauthorizedError(message="Yetkisiz erişim!"):
+    """
+    IsAllow çağrısı sonucunda kullanıcı yetkiye sahip değilse hata fırlatmak için bu metodu çağırabilirsiniz.
+    :param message: Hata mesajı default:"Yetkisiz erişim!"
+    :return:
+    """
+    return abort(401, text=message)
+
+
+def KeyGenerator():
+    return secrets.token_urlsafe()
+
+
+
+
+
+class UsersVarible:
+    def __init__(self, username:str, key: str, rol: Rol):
+        self.username = username
+        self.key = key
+        self.rol = rol
+        self.time = 60 * 5
+        __UsersVaribles__.append(self)
+
+    def delete(self):
+        __UsersVaribles__.remove(self)
+        del self
+
+
+def DeleteUser(key):
+    for user in __UsersVaribles__:
+        if user.key == key:
+            user.delete()
+            break
+
+class Timer(Thread):
+    def __init__(self, event):
+        Thread.__init__(self)
+        self.stopped = event
+
+    def run(self):
+        while not self.stopped.wait(1):
+            for user in __UsersVaribles__:
+                user.time -= 1
+                if user.time <= 0:
+                    print("deleting", user.username, user.key, user.rol)
+                    user.delete()
+
+
+
+
+stopFlag = Event()
+thread = Timer(stopFlag)
+thread.start()
+#stopFlag.set()

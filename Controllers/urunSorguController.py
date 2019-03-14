@@ -2,17 +2,16 @@ from Network.bottle import *
 from Business import urunSorguBusiness
 from Network.Security import *
 
-test = 0
 print("urunSorguController")
 
 
-@get('/urunsorgula/getlist/<grupId>/<search>')
-def getlist(grupId, search):
+@get('/urunsorgula/getlist/<grupId>/<arama>')
+def getlist(grupId, arama):
     if IsAllow(request, Roller.TumHesaplar):
-        print("Urunsorgula getlist:", search)
-        return json_dumps(urunSorguBusiness.getList(search, grupId))
+        print("Urunsorgula getlist:", arama)
+        return json_dumps(urunSorguBusiness.getList(arama, grupId))
     else:
-        abort(code=500, text=ErrorText.get('500'))
+        UnauthorizedError()
 
 
 @get('/urunsorgula/gruplar/<ustGrupid>')
@@ -21,9 +20,12 @@ def gruplar(ustGrupid):
         print("Urunsorgula gruplar:", ustGrupid)
         return json_dumps(urunSorguBusiness.getGruplar(ustGrupid))
     else:
-        abort(code=500, text=ErrorText.get('500'))
+        UnauthorizedError()
 
 
 @route('/urunsorgula/sorgula/<urunKodu>')
 def sorgula(urunKodu):
-    return ""
+    if IsAllow(request, Roller.TumHesaplar):
+        print("sorgula")
+    else:
+        UnauthorizedError()

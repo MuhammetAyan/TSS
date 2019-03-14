@@ -21,11 +21,12 @@ def getGruplar(ustGrupid):
     :param ustGrupid:
     :return:
     """
+    print("grup")
     if ustGrupid == 0:
-        datalist: list[dbUrunlerGruplarModel] = select("select * from UrunlerGruplar where Urunmu=0 and Grupid = NULL'")
+        datalist: list[dbUrunlerGruplarModel] = select("select * from UrunlerGruplar where Urunmu=0 and GrupId = NULL")
     else:
-        datalist: list[dbUrunlerGruplarModel] = select("select * from UrunlerGruplar where Urunmu=0 and Grupid = {} '".format(ustGrupid))
-    temp = []
+        datalist: list[dbUrunlerGruplarModel] = select("select * from UrunlerGruplar where Urunmu=0 and GrupId = {}".format(ustGrupid))
+    temp: list[GrupModel] = []
     for data in datalist:
         x = GrupModel(data.id, data.StokAdi)
         temp.append(x)
