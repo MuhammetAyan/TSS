@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>TSS TEST</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <script src="./angular.min.js"></script>
+    <script>
+        var app = angular.module('app', []);
+        app.controller('ctrl', function($scope, $http) {
+            $scope.responses = [];
+            $scope.url="http://localhost:8080/account/login";
+            $scope.type="POST";
+            $scope.data ='{"username":"Muhammet", "password":"1234"}';
+
+            $scope.metadata = [
+                {"key":"Content-Type", "value":"application/json"},
+            ];
+
+            $scope.veriler = [
+                {"key":"username", "value":"Muhammet"},
+                {"key":"password", "value":"1234"}
+            ];
+
+            $scope.yeniveri = function(){
+                $scope.veriler.push({"key":"", "value":""});
+            };
+
+            $scope.yenimeta = function(){
+                $scope.metadata.push({"key":"", "value":""});
+            };
+
+            $scope.submit = function(){
+                var head = '{ ';
+                for(var i=0; i<$scope.metadata.length;i++){
+                    var key =$scope.metadata[i]['key'];
+                    var val =$scope.metadata[i]['value'];
+                    head +='"' + key + '" : "' + val + '",';
+                }
+                head = head.slice(0, -1)
+                head += '}';
+
+                var data = '{ ';
+                for(var i=0; i<$scope.veriler.length;i++){
+                    var key =$scope.veriler[i]['key'];
+                    var val =$scope.veriler[i]['value'];
+                    data +='"' + key + '" : "' + val + '",';
+                }
+                data = data.slice(0, -1)
+                data += '}';
+
+                //var data = $scope.data;
+                 $http({
+                    method : $scope.type,
+                    url : $scope.url,
+                    data: JSON.parse(data), //JSON.parse($scope.data.split("'").join("\"")),
+                    headers: JSON.parse(head),
+                 }).then(function mySuccess(response) {
+                    $scope.responses.unshift(response);
+                 }, function myError(response) {
+                    $scope.responses.unshift(response);
+                 });
+            };
+
+            $scope.responseClear = function(){
+                $scope.responses = [];
+            };
+
+            $scope.deleteData = function(index){
+                $scope.veriler.splice(index, 1);
+            };
+
+            $scope.deleteHeader = function(index){
+                $scope.metadata.splice(index, 1);
+            };
+
+            $scope.urlWrite = function(url, metod){
+                $scope.url = "http://localhost:8080/" + url;
+                $scope.type = metod;
+            };
+        });
+    </script>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+    <div class="container">
+        <div class="row">
+            <h1 class="col-12 bg-success text-light text-center">Paket Gönder</h1>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="input-group">
+                    <select class="input-group-item form-control" ng-model="type" style="max-width:100px;">
+                        <option>GET</option>
+                        <option>POST</option>
+                        <option>DELETE</option>
+                        <option>PUT</option>
+                    </select>
+                    <input class="input-group-item form-control" type="text" ng-model="url" name="url"
+                    ng-class="{'border-danger': url.includes('<'), 'text-danger': url.includes('<')}">
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="btn-group">
+                    <div class="btn btn-dark" ng-click="urlWrite('account/login', 'POST')">Login</div>
+                    <div class="btn btn-dark" ng-click="urlWrite('account/logout', 'GET')">Logout</div>
+                    <div class="btn btn-secondary" ng-click="urlWrite('app/grafik', 'GET')">Oran</div>
+                    <div class="btn btn-secondary" ng-click="urlWrite('app/optimizasyon', 'GET')">Optimizasyon</div>
+                    <div class="btn btn-success" ng-click="urlWrite('urunsorgula/getlist/<grupId>/<arama>', 'GET')">Ürün Arama</div>
+                    <div class="btn btn-success" ng-click="urlWrite('urunsorgula/gruplar/<ustGrupid>', 'GET')">Grup Arama</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h3>Üst Bilgi Gir</h3>
+                <div class="list-group">
+                    <div class="list-group-item list-group-item-success" ng-repeat="meta in metadata">
+                        <div class="input-group">
+                            <input class="input-group-item form-control" type="text" ng-model="meta.key" placeholder="Key">
+                            <input class="input-group-item form-control" type="text" ng-model="meta.value" placeholder="Value">
+                            <div class="btn btn-dark input-group-item" ng-click="deleteHeader($index)">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <div class="btn btn-success" ng-click="yenimeta()">Yeni</div>
+                    <div class="btn btn-warning" ng-click='metadata=[{"key":"Content-Type", "value":"application/json"},];'>Sıfırla</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <h3>Veri Gir</h3>
+                <div class="list-group">
+                    <div class="list-group-item list-group-item-success" ng-repeat="veri in veriler">
+                        <div class="input-group">
+                            <input class="input-group-item form-control" type="text" ng-model="veri.key" placeholder="Key">
+                            <input class="input-group-item form-control" type="text" ng-model="veri.value" placeholder="Value">
+                            <div class="btn btn-dark input-group-item" ng-click="deleteData($index)">-</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <div class="btn btn-success" ng-click="yeniveri()">Yeni</div>
+                    <div class="btn btn-warning" ng-click='veriler=[
+                    {"key":"username", "value":"Muhammet"},{"key":"password", "value":"1234"}];'>Sıfırla</div>
+                </div>
+                <!--textarea class="w-50 form-control" ng-model="data"></textarea-->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="btn-group">
+                    <div class="btn btn-primary" ng-click="submit()">Gönder</div>
+                    <div class="btn btn-danger" ng-click="responseClear()">Temizle</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="list-group">
+                    <div class="list-group-item " ng-class="{'list-group-item-danger':response.status >= 400, 'list-group-item-success': response.status < 300, 'list-group-item-warning': response.status >= 300}" ng-repeat="response in responses">
+                        <table class="">
+                            <tr>
+                                <td><b>Url</b></td>
+                                <td><b><span class="badge badge-dark">{{response.config.method}}</span> {{response.config.url}}</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Request Header</b></td>
+                                <td>{{response.config.headers}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Request Data</b></td>
+                                <td>{{response.config.data}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Response Data</b></td>
+                                <td>
+                                    {{response.data}}
+                                    <div class="btn btn-success btn-sm" ng-show="response.data.auth"
+                                         ng-click='metadata.push({"key":"auth", "value": response.data.auth})'>Keyi Al</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Status</b></td>
+                                <td><span class="badge badge-dark">{{response.status}}</span> {{response.statusText}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

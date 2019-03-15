@@ -6,12 +6,12 @@ print("testController")
 
 @route('/')
 def index():
-    redirect("/test/index.html")
+    redirect("/test/paketgonder.html")
 
 
 @route('/test/')
 @route('/test/<filename>')
-def test(filename="index.html"):
+def test(filename="paketgonder.html"):
     return static_file(filename, root="./Test/")
 
 
