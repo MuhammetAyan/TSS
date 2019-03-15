@@ -5,15 +5,10 @@ from Network.Security import *
 print("accountController")
 
 
-@route('/t/<filename>')
-def test(filename):
-    return static_file(filename, root="./Test/")
-
 
 @post('/account/login')
 def login():
     if IsAllow(request, Roller.Misafir):
-        print(request.forms.get('username'))
         username = request.json.get('username')
         password = request.json.get('password')
         print("Kullanıcı adı şifre:", username, password)

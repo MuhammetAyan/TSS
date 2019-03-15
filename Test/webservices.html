@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>TSS TEST</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <script src="./angular.min.js"></script>
+    <!--script src="./bootstrap.min.js"></script-->
+
+    <script>
+    var app = angular.module('app', []);
+        app.controller('ctrl', function($scope, $http) {
+            $scope.services = [
+                {'url':'/account/login', 'metot':'POST', 'detail':'Giriş yapma', 'request':'', 'response':'', 'errorresponse':''},
+            ];
+            $scope.load = function(){
+                $http({
+                  method: 'GET',
+                  url: '/loadservices',
+                  headers: {
+                    "Content-Type": "application/json",
+                   }
+                }).then(function successCallback(response) {
+                    $scope.services = response.data.services;
+                  }, function errorCallback(response) {
+                    alert("Yüklenemedi:" + response.data.services);
+                  });
+            };
+
+            $scope.save = function(){
+                $http({
+                  method: 'POST',
+                  url: '/saveservices',
+                  data: {'services':$scope.services},
+                  headers: {
+                    "Content-Type": "application/json",
+                   }
+                }).then(function successCallback(response) {
+                    alert("Kayıt başarılı");
+                  }, function errorCallback(response) {
+                    alert("Kaydedilmedi:" + response.status);
+                  });
+            };
+
+            $scope.load();
+        });
+    </script>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+    <div class="container">
+        <div class="row">
+            <h1>Web Servisler</h1>
+        </div>
+        <div class="row">
+            <div class="col col-12">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-warning" ng-click="load()">Tekrar yükle</button>
+                    <button type="button" class="btn btn-success" ng-click="save()">Kaydet</button>
+                </div>
+                <input class="form-control w-50" type="text" ng-model="search" placeholder="Ara">
+                <div class="card" ng-repeat="service in services| filter:search">
+                  <div class="card-body">
+                      <h5 class="card-title">
+                          <span class="badge" ng-class="{'badge-success':service.code =='Acelesi yok', 'badge-warning':service.code =='Başlanılması gerek', 'badge-danger':service.code =='Acil'}">{{service.code}}</span>
+                          <span class="badge badge-dark">{{service.metot}}</span> {{service.url}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted"></h6>
+                    <p class="card-text">{{service.detail}}</p>
+                      <!-- Button trigger modal -->
+                      <div class="btn-group">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id{{$index}}">
+                      Ayrıntılar
+                    </button>
+                      <div class="dropdown">
+                          <button class="btn dropdown-toggle" ng-class="{'btn-success':service.status =='Bitti', 'btn-warning':service.status =='Yapılıyor', 'btn-secondary':service.status =='Başlanmadı'}" type="button" id="dropdownMenuButton5" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{service.status}}
+                          </button>
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton5">
+                            <a class="dropdown-item" ng-click="service.status = 'Başlanmadı'">Başlanmadı</a>
+                            <a class="dropdown-item" ng-click="service.status = 'Yapılıyor'">Yapılıyor</a>
+                            <a class="dropdown-item" ng-click="service.status = 'Bitti'">Bitti</a>
+                          </div>
+                      </div>
+                    </div>
+                    <button type="button" class="btn btn-danger float-right" ng-click="services.splice($index, 1)">
+                      Sil
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="id{{$index}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                <div class="input-group">
+                                    <select ng-model="service.metot" class="input-group-item form-control bg-success text-light" style="max-width:100px">
+                                        <option>GET</option>
+                                        <option selected>POST</option>
+                                        <option>DELETE</option>
+                                    </select>
+                                    <input type="text" class="form-control input-group-item" ng-model="service.url">
+                                </div>
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              <div class="btn-group">
+                                  <div class="dropdown">
+                                      <button class="btn dropdown-toggle" ng-class="{'btn-success':service.status =='Bitti', 'btn-warning':service.status =='Yapılıyor', 'btn-secondary':service.status =='Başlanmadı'}" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{service.status}}
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" ng-click="service.status = 'Başlanmadı'">Başlanmadı</a>
+                                        <a class="dropdown-item" ng-click="service.status = 'Yapılıyor'">Yapılıyor</a>
+                                        <a class="dropdown-item" ng-click="service.status = 'Bitti'">Bitti</a>
+                                      </div>
+                                  </div>
+                                  <div class="dropdown">
+                                      <button class="btn dropdown-toggle" ng-class="{'btn-success':service.code =='Acelesi yok', 'btn-warning':service.code =='Başlanılması gerek', 'btn-danger':service.code =='Acil'}" type="button" id="dropdownMenuButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {{service.code}}
+                                      </button>
+                                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton7">
+                                        <a class="dropdown-item" ng-click="service.code = ''">Kodsuz</a>
+                                        <a class="dropdown-item" ng-click="service.code = 'Acil'">Acil</a>
+                                        <a class="dropdown-item" ng-click="service.code = 'Başlanılması gerek'">Başlanılması gerek</a>
+                                        <a class="dropdown-item" ng-click="service.code = 'Acelesi yok'">Acelesi yok</a>
+                                      </div>
+                                  </div>
+                              </div>
+                              <textarea class="form-control" ng-model="service.detail"></textarea>
+                              <h5>Request</h5>
+                              <textarea class="form-control" ng-model="service.request"></textarea>
+                              <h5>Response</h5>
+                              <textarea class="form-control" ng-model="service.response"></textarea>
+                              <h5>Error response</h5>
+                              <textarea class="form-control" ng-model="service.errorresponse"></textarea>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Tamam</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="btn btn-success" ng-click="services.push({'url':'/', 'metot':'GET', 'detail':'', status:'Başlanmadı', 'request':'', 'response':'', 'errorresponse':''})">Yeni Web Servis Tasarımı</div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>
