@@ -5,7 +5,7 @@ def CreateModels():
     global temp
     f = open("../DBModels.py", mode="w", encoding="utf8")
     print("Modeller oluşturuluyor...")
-    temp = ""
+    temp = "import Data.DBConnect\n"
     imports = []
 
     def WriteClass(name: str):
@@ -36,6 +36,25 @@ def CreateModels():
             return 'bool'
         else:
             return 'object'
+
+    def addInsert(columns:str, table:str):
+        global temp
+        temp += "\n\tdef insert(self):\n"
+        temp += """\t\tData.DBConnect.query(\"\"\"INSERT INTO {} ("""
+        for col in columns:
+            if str(col[0]) != "id":
+                temp += str(col[0]) + ", "
+        temp = temp[:-2]
+        temp += ") VALUES ("
+        temp += "'{}', " * (len(columns)-1)
+        temp = temp[:-2]
+        temp += ')\"\"\".format("' + str(table[0]) + '", '
+        for col in columns:
+            if str(col[0]) != "id":
+                temp += "self." + str(col[0]) + ", "
+        temp = temp[:-2]
+        temp += "))"
+
     tables = select("select name, object_id from sys.tables WHERE type = 'U'", IsFree=True)
     n = 0
     for table in tables:
@@ -46,6 +65,8 @@ def CreateModels():
         for col in columns:
             WriteAtt(col, i)
             i += 1
+
+        addInsert(columns, table)
 
     print()
     for imp in imports:

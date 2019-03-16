@@ -2,6 +2,9 @@ from Network.bottle import route, static_file, post, request,get, response,redir
 import json
 
 print("testController")
+"""
+Bu dosya test dosyasıdır. Gerçek projeye dahil değildir.
+"""
 
 
 @route('/')
