@@ -53,7 +53,27 @@ def CreateModels():
             if str(col[0]) != "id":
                 temp += "self." + str(col[0]) + ", "
         temp = temp[:-2]
-        temp += "))"
+        temp += "))\n"
+
+    def addUpdate(columns:str, table:str):
+        global temp
+        temp += "\n\tdef update(self):\n"
+        temp += """\t\tData.DBConnect.query(\"\"\"UPDATE {} SET """
+        for col in columns:
+            if str(col[0]) != "id":
+                temp += str(col[0]) + "='{}'" + ", "
+        temp = temp[:-2]
+        temp += " WHERE id = {}\"\"\".format(\"" + str(table[0]) + '\", '
+        for col in columns:
+            if str(col[0]) != "id":
+                temp += "self." + str(col[0]) + ", "
+        temp += "self." + str(columns[0][0])
+        temp += "))\n"
+
+    def addDelete(table:str):
+        global temp
+        temp += "\n\tdef delete(self):\n"
+        temp += """\t\tData.DBConnect.query(\"\"\"DELETE FROM """ + str(table[0]) + """ WHERE id = {}\"\"\".format(self.id))\n\n"""
 
     tables = select("select name, object_id from sys.tables WHERE type = 'U'", IsFree=True)
     n = 0
@@ -67,6 +87,8 @@ def CreateModels():
             i += 1
 
         addInsert(columns, table)
+        addUpdate(columns, table)
+        addDelete(table)
 
     print()
     for imp in imports:
