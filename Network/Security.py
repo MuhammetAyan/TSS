@@ -1,10 +1,9 @@
-from Network.bottle import * #request, abort
-from Data.DBConnect import select
-from Data.DBModels import dbKullanicilarModel
+from Network.bottle import *
 import secrets
 from threading import Thread, Event
 
 __UsersVaribles__ = []
+
 
 class Rol:
     def __init__(self, name: str = ""):
@@ -76,11 +75,8 @@ def KeyGenerator():
     return secrets.token_urlsafe()
 
 
-
-
-
 class UsersVarible:
-    def __init__(self, username:str, key: str, rol: Rol):
+    def __init__(self, username: str, key: str, rol: Rol):
         self.username = username
         self.key = key
         self.rol = rol
@@ -110,8 +106,6 @@ class Timer(Thread):
                 if user.time <= 0:
                     print("deleting", user.username, user.key, user.rol)
                     user.delete()
-
-
 
 
 stopFlag = Event()

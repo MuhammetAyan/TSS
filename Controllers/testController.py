@@ -38,3 +38,8 @@ def load():
     response.set_header("Content-Type", "application/json")
     print(json.loads(data, encoding="UTF-8"))
     return json.loads(str(data), encoding="UTF-8")
+
+
+@get('/mobil')
+def mobil():
+    return json.dumps({'veri': 123})
