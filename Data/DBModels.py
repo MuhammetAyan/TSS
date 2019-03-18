@@ -2,23 +2,23 @@ import datetime
 import Data.DBConnect
 
 
-class dbKriterAgirlikModel(object):
+class dbGrupStratejilerModel(object):
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.MaliyetPuan: float = data[2]
-		self.KalitePuan: float = data[3]
-		self.TeslimatPuan: float = data[4]
-		self.MemnuniyetPuan: float = data[5]
+		self.GrupId: int = data[1]
+		self.Maliyet: float = data[2]
+		self.Kalite: float = data[3]
+		self.Teslimat: float = data[4]
+		self.Memnuniyet: float = data[5]
 
 	def insert(self):
-		Data.DBConnect.query("""INSERT INTO {} (StokKodu, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("KriterAgirlik", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan))
+		Data.DBConnect.query("""INSERT INTO {} (GrupId, Maliyet, Kalite, Teslimat, Memnuniyet) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("GrupStratejiler", self.GrupId, self.Maliyet, self.Kalite, self.Teslimat, self.Memnuniyet))
 
 	def update(self):
-		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', MaliyetPuan='{}', KalitePuan='{}', TeslimatPuan='{}', MemnuniyetPuan='{}' WHERE id = {}""".format("KriterAgirlik", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.id))
+		Data.DBConnect.query("""UPDATE {} SET GrupId='{}', Maliyet='{}', Kalite='{}', Teslimat='{}', Memnuniyet='{}' WHERE id = {}""".format("GrupStratejiler", self.GrupId, self.Maliyet, self.Kalite, self.Teslimat, self.Memnuniyet, self.id))
 
 	def delete(self):
-		Data.DBConnect.query("""DELETE FROM KriterAgirlik WHERE id = {}""".format(self.id))
+		Data.DBConnect.query("""DELETE FROM GrupStratejiler WHERE id = {}""".format(self.id))
 
 
 
@@ -40,25 +40,22 @@ class dbKullanicilarModel(object):
 
 
 
-class dbMalKabulModel(object):
+class dbUrunlerModel(object):
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.MaliyetPuan: float = data[3]
-		self.KalitePuan: float = data[4]
-		self.TeslimatPuan: float = data[5]
-		self.MemnuniyetPuan: float = data[6]
-		self.Tarih: datetime.datetime = data[7]
+		self.StokAdi: str = data[2]
+		self.GrupId: int = data[3]
+		self.DefTedId: int = data[4]
 
 	def insert(self):
-		Data.DBConnect.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan, Tarih) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih))
+		Data.DBConnect.query("""INSERT INTO {} (StokKodu, StokAdi, GrupId, DefTedId) VALUES ('{}', '{}', '{}', '{}')""".format("Urunler", self.StokKodu, self.StokAdi, self.GrupId, self.DefTedId))
 
 	def update(self):
-		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', MaliyetPuan='{}', KalitePuan='{}', TeslimatPuan='{}', MemnuniyetPuan='{}', Tarih='{}' WHERE id = {}""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih, self.id))
+		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', StokAdi='{}', GrupId='{}', DefTedId='{}' WHERE id = {}""".format("Urunler", self.StokKodu, self.StokAdi, self.GrupId, self.DefTedId, self.id))
 
 	def delete(self):
-		Data.DBConnect.query("""DELETE FROM MalKabul WHERE id = {}""".format(self.id))
+		Data.DBConnect.query("""DELETE FROM Urunler WHERE id = {}""".format(self.id))
 
 
 
@@ -81,23 +78,123 @@ class dbSonuclarModel(object):
 
 
 
+class dbMalzemeGruplariModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.GrupAdi: str = data[1]
+		self.UstGrupId: int = data[2]
+
+	def insert(self):
+		Data.DBConnect.query("""INSERT INTO {} (GrupAdi, UstGrupId) VALUES ('{}', '{}')""".format("MalzemeGruplari", self.GrupAdi, self.UstGrupId))
+
+	def update(self):
+		Data.DBConnect.query("""UPDATE {} SET GrupAdi='{}', UstGrupId='{}' WHERE id = {}""".format("MalzemeGruplari", self.GrupAdi, self.UstGrupId, self.id))
+
+	def delete(self):
+		Data.DBConnect.query("""DELETE FROM MalzemeGruplari WHERE id = {}""".format(self.id))
+
+
+
+class dbUrunTedarikciModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.TedarikciId: int = data[2]
+		self.MaliyetPuan: float = data[3]
+		self.MaliyetAdet: float = data[4]
+		self.KalitePuan: float = data[5]
+		self.KaliteAdet: float = data[6]
+		self.TeslimatPuan: float = data[7]
+		self.TeslimatAdet: float = data[8]
+
+	def insert(self):
+		Data.DBConnect.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, MaliyetAdet, KalitePuan, KaliteAdet, TeslimatPuan, TeslimatAdet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet, self.TeslimatPuan, self.TeslimatAdet))
+
+	def update(self):
+		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', MaliyetPuan='{}', MaliyetAdet='{}', KalitePuan='{}', KaliteAdet='{}', TeslimatPuan='{}', TeslimatAdet='{}' WHERE id = {}""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet, self.TeslimatPuan, self.TeslimatAdet, self.id))
+
+	def delete(self):
+		Data.DBConnect.query("""DELETE FROM UrunTedarikci WHERE id = {}""".format(self.id))
+
+
+
+class dbMalKabulModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.TedarikciId: int = data[2]
+		self.MaliyetPuan: int = data[3]
+		self.KalitePuan: int = data[4]
+		self.TeslimatPuan: int = data[5]
+		self.MemnuniyetPuan: int = data[6]
+		self.Tarih: datetime.datetime = data[7]
+		self.Adet: int = data[8]
+
+	def insert(self):
+		Data.DBConnect.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan, Tarih, Adet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih, self.Adet))
+
+	def update(self):
+		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', MaliyetPuan='{}', KalitePuan='{}', TeslimatPuan='{}', MemnuniyetPuan='{}', Tarih='{}', Adet='{}' WHERE id = {}""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih, self.Adet, self.id))
+
+	def delete(self):
+		Data.DBConnect.query("""DELETE FROM MalKabul WHERE id = {}""".format(self.id))
+
+
+
+class dbUrunStratejilerModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.MaliyetPuan: float = data[2]
+		self.KalitePuan: float = data[3]
+		self.TeslimatPuan: float = data[4]
+		self.MemnuniyetPuan: float = data[5]
+
+	def insert(self):
+		Data.DBConnect.query("""INSERT INTO {} (StokKodu, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("UrunStratejiler", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan))
+
+	def update(self):
+		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', MaliyetPuan='{}', KalitePuan='{}', TeslimatPuan='{}', MemnuniyetPuan='{}' WHERE id = {}""".format("UrunStratejiler", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.id))
+
+	def delete(self):
+		Data.DBConnect.query("""DELETE FROM UrunStratejiler WHERE id = {}""".format(self.id))
+
+
+
 class dbTedarikciModel(object):
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.TedarikciAdi: str = data[1]
-		self.MemnuniyetPuani: float = data[2]
+		self.Memnuniyet: float = data[2]
 		self.MemnuniyetAdedi: float = data[3]
-		self.TeslimatPuani: float = data[4]
-		self.TeslimatAdedi: float = data[5]
 
 	def insert(self):
-		Data.DBConnect.query("""INSERT INTO {} (TedarikciAdi, MemnuniyetPuani, MemnuniyetAdedi, TeslimatPuani, TeslimatAdedi) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("Tedarikci", self.TedarikciAdi, self.MemnuniyetPuani, self.MemnuniyetAdedi, self.TeslimatPuani, self.TeslimatAdedi))
+		Data.DBConnect.query("""INSERT INTO {} (TedarikciAdi, Memnuniyet, MemnuniyetAdedi) VALUES ('{}', '{}', '{}')""".format("Tedarikci", self.TedarikciAdi, self.Memnuniyet, self.MemnuniyetAdedi))
 
 	def update(self):
-		Data.DBConnect.query("""UPDATE {} SET TedarikciAdi='{}', MemnuniyetPuani='{}', MemnuniyetAdedi='{}', TeslimatPuani='{}', TeslimatAdedi='{}' WHERE id = {}""".format("Tedarikci", self.TedarikciAdi, self.MemnuniyetPuani, self.MemnuniyetAdedi, self.TeslimatPuani, self.TeslimatAdedi, self.id))
+		Data.DBConnect.query("""UPDATE {} SET TedarikciAdi='{}', Memnuniyet='{}', MemnuniyetAdedi='{}' WHERE id = {}""".format("Tedarikci", self.TedarikciAdi, self.Memnuniyet, self.MemnuniyetAdedi, self.id))
 
 	def delete(self):
 		Data.DBConnect.query("""DELETE FROM Tedarikci WHERE id = {}""".format(self.id))
+
+
+
+class dbsysdiagramsModel(object):
+	def __init__(self, data: tuple):
+		self.name: object = data[0]
+		self.principal_id: int = data[1]
+		self.diagram_id: int = data[2]
+		self.version: int = data[3]
+		self.definition: object = data[4]
+
+	def insert(self):
+		Data.DBConnect.query("""INSERT INTO {} (name, principal_id, diagram_id, version, definition) VALUES ('{}', '{}', '{}', '{}')""".format("sysdiagrams", self.name, self.principal_id, self.diagram_id, self.version, self.definition))
+
+	def update(self):
+		Data.DBConnect.query("""UPDATE {} SET name='{}', principal_id='{}', diagram_id='{}', version='{}', definition='{}' WHERE id = {}""".format("sysdiagrams", self.name, self.principal_id, self.diagram_id, self.version, self.definition, self.name))
+
+	def delete(self):
+		Data.DBConnect.query("""DELETE FROM sysdiagrams WHERE id = {}""".format(self.id))
 
 
 
@@ -116,45 +213,4 @@ class dbTedarikUrunleriModel(object):
 
 	def delete(self):
 		Data.DBConnect.query("""DELETE FROM TedarikUrunleri WHERE id = {}""".format(self.id))
-
-
-
-class dbUrunlerGruplarModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.GrupId: int = data[2]
-		self.DefaultTedId: int = data[3]
-		self.Urunmu: bool = data[4]
-		self.StokAdi: str = data[5]
-
-	def insert(self):
-		Data.DBConnect.query("""INSERT INTO {} (StokKodu, GrupId, DefaultTedId, Urunmu, StokAdi) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("UrunlerGruplar", self.StokKodu, self.GrupId, self.DefaultTedId, self.Urunmu, self.StokAdi))
-
-	def update(self):
-		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', GrupId='{}', DefaultTedId='{}', Urunmu='{}', StokAdi='{}' WHERE id = {}""".format("UrunlerGruplar", self.StokKodu, self.GrupId, self.DefaultTedId, self.Urunmu, self.StokAdi, self.id))
-
-	def delete(self):
-		Data.DBConnect.query("""DELETE FROM UrunlerGruplar WHERE id = {}""".format(self.id))
-
-
-
-class dbUrunTedarikciModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.MaliyetPuan: float = data[3]
-		self.MaliyetAdet: float = data[4]
-		self.KalitePuan: float = data[5]
-		self.KaliteAdet: float = data[6]
-
-	def insert(self):
-		Data.DBConnect.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, MaliyetAdet, KalitePuan, KaliteAdet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}')""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet))
-
-	def update(self):
-		Data.DBConnect.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', MaliyetPuan='{}', MaliyetAdet='{}', KalitePuan='{}', KaliteAdet='{}' WHERE id = {}""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet, self.id))
-
-	def delete(self):
-		Data.DBConnect.query("""DELETE FROM UrunTedarikci WHERE id = {}""".format(self.id))
 
