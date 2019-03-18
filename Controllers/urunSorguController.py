@@ -1,26 +1,22 @@
-from Network.bottle import *
-from Business import urunSorguBusiness
+from Network.bottle import route,get,request,response
+from Business import UrunBusiness
 from Network.Security import *
 
 print("urunSorguController")
 
 
-@get('/urunsorgula/getlist/<grupId>/<arama>')
-def getlist(grupId, arama):
+@route('/urunlerisorgula/adresigetir/<stokkodu>')
+def AdresiGetir(stokkodu):
+    """
+    :param grupId:
+    :param arama:
+    :return:
+    """
     if IsAllow(request, Roller.TumHesaplar):
-        print("Urunsorgula getlist:", arama)
-        return json_dumps(urunSorguBusiness.getList(arama, grupId))
+        return json_dumps(UrunBusiness.UrunAdresi(stokkodu))
     else:
         UnauthorizedError()
 
-
-@get('/urunsorgula/gruplar/<ustGrupid>')
-def gruplar(ustGrupid):
-    if IsAllow(request, Roller.TumHesaplar):
-        print("Urunsorgula gruplar:", ustGrupid)
-        return json_dumps(urunSorguBusiness.getGruplar(ustGrupid))
-    else:
-        UnauthorizedError()
 
 
 @route('/urunsorgula/sorgula/<urunKodu>')
