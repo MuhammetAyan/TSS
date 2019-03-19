@@ -2,6 +2,7 @@ from Controllers.accountController import *
 from Controllers.appController import *
 from Controllers.urunSorguController import *
 from Controllers.testController import *
+from Controllers.GrupStratejiController import *
 from Network.runserver import runserver
 
 

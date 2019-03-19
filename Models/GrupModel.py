@@ -1,7 +1,8 @@
 
 class GrupModel(object):
-	def __init__(self, id,adi):
+	def __init__(self, id,GrupAdi):
 		self.id: int = id
-		self.Adi: str = adi
+		self.grupadi: str = GrupAdi
+
 
 
