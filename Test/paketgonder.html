@@ -8,10 +8,58 @@
     <script>
         var app = angular.module('app', []);
         app.controller('ctrl', function($scope, $http) {
+
+
             $scope.responses = [];
-            $scope.url="http://localhost:8080/account/login";
+            $scope.url= "";
             $scope.type="POST";
+            $scope.detail = "";
+
             $scope.data ='{"username":"Muhammet", "password":"1234"}';
+
+            $scope.urllist= [
+            {'text': 'Login', 'url': '/account/login', 'metot': 'POST'},
+            {'text': 'Logout', 'url': '/account/logout', 'metot': 'GET'},
+            ];
+
+            $http({
+                    method : "GET",
+                    url : "/loadurllist",
+                    headers: {
+                        "Content-Type":"application/json",
+                    }
+                 }).then(function mySuccess(response) {
+                    var services = response.data.services;
+                    $scope.urllist = [];
+                    for(var i=0; i < services.length; i++){
+                        var reqStr = services[i].request.split("'").join('"');
+                        if (reqStr == ""){
+                            reqStr = "{}";
+                        }
+                        console.log("regStr = " + reqStr);
+                        var request = JSON.parse(reqStr);
+                        //console.log(request);
+                        var req =[];
+                        console.log(services[i].url);
+                        for(var r in request){
+                            var key = r;
+                            var val = request[r];
+                            req.push({'key': r, 'value': val});
+                            console.log({'key': r, 'value': val});
+                        }
+                        $scope.urllist.push(
+                        {'text':    services[i].url,
+                         'url':     services[i].url,
+                         'metot':   services[i].metot,
+                         'status':  services[i].status,
+                         'detail':  services[i].detail,
+                         'request': req,
+                        });
+                    }
+                 }, function myError(response) {
+                    alert("HATA: Url listesi getirilemedi.");
+                 });
+
 
             $scope.metadata = [
                 {"key":"Content-Type", "value":"application/json"},
@@ -74,10 +122,44 @@
                 $scope.metadata.splice(index, 1);
             };
 
-            $scope.urlWrite = function(url, metod){
-                $scope.url = "http://localhost:8080/" + url;
+            $scope.urlWrite = function(url, metod, request, detail){
+                $scope.url = location.protocol + '//' + location.host + url;
                 $scope.type = metod;
+                $scope.detail = url + ": " + detail;
+                if (request != undefined){
+                    $scope.veriler = [];
+                    for(var i=0; i<request.length ;i++){
+                        $scope.veriler.push({"key": request[i]["key"], "value": request[i]["value"]});
+                    }
+                }
             };
+
+            $scope.urllist[0]
+            $scope.urlWrite("/account/login", "POST", undefined, "Giriş Yapma");
+
+            $scope.setCookie =function(cname, cvalue, exdays) {
+              var d = new Date();
+              d.setTime(d.getTime() + (exdays*24*60*60*1000));
+              var expires = "expires="+ d.toUTCString();
+              document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            }
+
+            $scope.getCookie = function(cname) {
+              var name = cname + "=";
+              var decodedCookie = decodeURIComponent(document.cookie);
+              var ca = decodedCookie.split(';');
+              for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                  c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                  return c.substring(name.length, c.length);
+                }
+              }
+              return "";
+            }
+
         });
     </script>
 </head>
@@ -89,6 +171,18 @@
         <div class="row">
             <div class="col-12">
                 <div class="input-group">
+                    <div class="dropdown">
+                      <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hazır Kodlar
+                      </button>
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item"
+                           ng-class="{'bg-success': item.status == 'Bitti', 'bg-warning': item.status == 'Yapılıyor',
+                           'bg-secondary': item.status == 'Başlanmadı', 'text-light': item.status != 'Yapılıyor'}"
+                           ng-repeat="item in urllist" ng-click="urlWrite(item.url, item.metot, item.reques, item.detail)">{{item.text}}</a>
+
+                      </div>
+                    </div>
                     <select class="input-group-item form-control" ng-model="type" style="max-width:100px;">
                         <option>GET</option>
                         <option>POST</option>
@@ -99,19 +193,10 @@
                     ng-class="{'border-danger': url.includes('<'), 'text-danger': url.includes('<')}">
                 </div>
             </div>
-            <div class="col-12">
-                <div class="btn-group">
-                    <div class="btn btn-dark" ng-click="urlWrite('account/login', 'POST')">Login</div>
-                    <div class="btn btn-dark" ng-click="urlWrite('account/logout', 'GET')">Logout</div>
-                    <div class="btn btn-secondary" ng-click="urlWrite('app/grafik', 'GET')">Oran</div>
-                    <div class="btn btn-secondary" ng-click="urlWrite('app/optimizasyon', 'GET')">Optimizasyon</div>
-                    <div class="btn btn-success" ng-click="urlWrite('urunsorgula/getlist/<grupId>/<arama>', 'GET')">Ürün Arama</div>
-                    <div class="btn btn-success" ng-click="urlWrite('urunsorgula/gruplar/<ustGrupid>', 'GET')">Grup Arama</div>
-                </div>
-            </div>
         </div>
         <div class="row">
             <div class="col-12">
+                <p>{{detail}}</p>
                 <h3>Üst Bilgi Gir</h3>
                 <div class="list-group">
                     <div class="list-group-item list-group-item-success" ng-repeat="meta in metadata">
@@ -124,7 +209,8 @@
                 </div>
                 <div class="btn-group">
                     <div class="btn btn-success" ng-click="yenimeta()">Yeni</div>
-                    <div class="btn btn-warning" ng-click='metadata=[{"key":"Content-Type", "value":"application/json"},];'>Sıfırla</div>
+                    <div class="btn btn-warning" ng-click='metadata=[{"key":"Content-Type", "value":"application/json"}];'>Reset</div>
+                    <div class="btn btn-danger" ng-click='metadata=[];'>Sil</div>
                 </div>
             </div>
         </div>
@@ -143,7 +229,8 @@
                 <div class="btn-group">
                     <div class="btn btn-success" ng-click="yeniveri()">Yeni</div>
                     <div class="btn btn-warning" ng-click='veriler=[
-                    {"key":"username", "value":"Muhammet"},{"key":"password", "value":"1234"}];'>Sıfırla</div>
+                    {"key":"username", "value":"Muhammet"},{"key":"password", "value":"1234"}];'>Reset</div>
+                     <div class="btn btn-danger" ng-click='veriler=[]'>Sil</div>
                 </div>
                 <!--textarea class="w-50 form-control" ng-model="data"></textarea-->
             </div>
@@ -191,5 +278,8 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
 </html>
