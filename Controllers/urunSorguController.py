@@ -17,11 +17,13 @@ def AdresiGetir(stokkodu):
     else:
         UnauthorizedError()
 
+"""Stok kodu verilen ürünün "Sonuclar" ve "TedarikciUrünleri" tablosundaki 
+bilgilerle tedarikçinin id'si, adı, AHP puanı ve ürünün varsayılan tedarikçisi olup olmadığı bilgisini döndürecek.
+[{'id': 0, 'tedarikci': 'tedarikçi adı', 'ahp': 23, 'default': False}] """
 
-
-@route('/urunsorgula/sorgula/<urunKodu>')
-def sorgula(urunKodu):
+@route('/urunlerisorgula/tedarikciler/<stokkodu>')
+def TedarikciBilgileriGetir(stokkodu):
     if IsAllow(request, Roller.TumHesaplar):
-        print("sorgula")
+        return json_dumps(UrunBusiness.TedarikciBilgi(stokkodu))
     else:
         UnauthorizedError()
