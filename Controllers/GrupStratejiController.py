@@ -1,4 +1,4 @@
-from Network.bottle import *
+from Network.bottle import route,get,request,response
 from Business import GrupBusiness
 from Network.Security import *
 
@@ -10,3 +10,11 @@ def Gruplar(ustGrupid):
     else:
         UnauthorizedError()
 
+
+
+@route('/strateji/grafik/<grupId>')
+def GrupStrateji(grupId):
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(GrupBusiness.GetGrupStratejileri(grupId))
+    else:
+        UnauthorizedError()

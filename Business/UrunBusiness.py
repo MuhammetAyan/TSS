@@ -1,5 +1,6 @@
 from Data.DBConnect import select
 from Data.DBModels import *
+from Models import UrunTedarikciBilgileriModel
 from Models.GrupModel import *
 
 """
@@ -30,3 +31,49 @@ def UrunAdresi(stokkodu):
     Gruplar.append(".")
     Gruplar.reverse()
     return Gruplar
+
+def TedarikciBilgi(stokkodu):
+    Tedarikci: list[dbTedarikUrunleriModel] = select("select * from TedarikUrunleri where StokKodu = '{}'".format(stokkodu))
+    print('tedarikciiddd:',len(Tedarikci))
+    TedarikciBilgi : list[UrunTedarikciBilgileriModel] = []
+    TedarikcilerBilgileri = []
+    for i in range(0,len(Tedarikci)-1):
+
+        Tedid = Tedarikci[i].TedarikciId
+
+
+        TedAdi: list[dbTedarikciModel] = select("select * from Tedarikci where id = '{}'".format(Tedid))
+        TedAdi2= TedAdi[0].TedarikciAdi
+        #print('tedadii2:',TedAdi2)
+
+        """
+        TedAhp : list[dbSonuclarModel] = select("select * from Sonuclar where TedarikciId = '{}' and StokKodu = '{}' ".format(Tedid, stokkodu))
+        TedAhp2 = TedAhp[0].AHPPuan
+        print('tedaahp:',TedAhp2)
+
+        
+        TedA = select(("select TedarikciAdi from Tedarikci where id = '{}'".format(Tedid)),True)
+        print('teda:',TedA)
+        
+        """
+        #x = UrunTedarikciBilgileriModel(Tedid,TedAdi2,5,False)
+        #TedarikciBilgi.append(x)
+
+        TedarikciBilgi.append(Tedid)
+        #print('tedbilgielr1:',TedarikciBilgi)
+
+        TedarikciBilgi.append(TedAdi2)
+        #print('tedbilgielr2:',TedarikciBilgi)
+
+        TedarikcilerBilgileri.append(TedarikciBilgi)
+        TedarikciBilgi = []
+
+
+
+    return TedarikcilerBilgileri
+
+
+
+
+
+
