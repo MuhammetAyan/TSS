@@ -32,6 +32,7 @@ def UrunAdresi(stokkodu):
     Gruplar.reverse()
     return Gruplar
 
+
 def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
     """
     /urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId>
