@@ -16,6 +16,6 @@ def TedarikciSorgula(arama):
     for Tedarikci in Tedarikciler:
         DefTedSayisi = select("select count(id) from Urunler where DefTedId = '{}'".format(Tedarikci.id))
         x = TedarikciModel(Tedarikci.id,Tedarikci.TedarikciAdi,DefTedSayisi)
-        TedarikciListesi.append(x)
+        TedarikciListesi.append(x.__dict__)
 
     return TedarikciListesi

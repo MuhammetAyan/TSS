@@ -17,6 +17,12 @@ def UstGruplar(grupId):
     else:
         UnauthorizedError()
 
+@route('/strateji/stratejigetir/<grupId>')
+def GrupStratejiOran(grupId):
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(GrupBusiness.GetGrupStratejiOran(grupId))
+    else:
+        UnauthorizedError()
 
 @route('/strateji/grafik/<grupId>')
 def GrupStrateji(grupId):

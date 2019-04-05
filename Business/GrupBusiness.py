@@ -3,6 +3,7 @@ from Data.DBModels import *
 from Models.GrupModel import *
 from Models.GrupStratejilerModel import *
 from Models.UstGrupModel import *
+from Models.GrupStratejiOranlariModel import *
 
 def getGruplar(ustGrupid):
     """
@@ -15,6 +16,42 @@ def getGruplar(ustGrupid):
     for data in datalist:
         x = GrupModel(data.id, data.GrupAdi)
         temp.append(x.__dict__)
+    return temp
+
+def GetGrupStratejiOran(Grupid):
+    """
+    grup id'si girilen malzeme grubuna ait strateji verisi döndürülecek. yapılıyor
+    [{'Kriter1': 'Maliyet', 'Kriter2': 'Teslimat', 'Oran': 5}]
+    :param Grupid:
+    :return:
+    """
+    datalist: list[dbGrupStratejilerModel] = select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
+    temp: list[GrupStratejiOranlariModel] = []
+    for data in datalist:
+        oran = data.Maliyet/data.Kalite
+        y = GrupStratejiOranlariModel('Maliyet','Kalite',oran)
+        temp.append(y.__dict__)
+
+        oran = data.Maliyet/data.Teslimat
+        y = GrupStratejiOranlariModel('Maliyet','Teslimat',oran)
+        temp.append(y.__dict__)
+
+        oran = data.Maliyet/data.Memnuniyet
+        y = GrupStratejiOranlariModel('Maliyet','Memnuniyet',oran)
+        temp.append(y.__dict__)
+
+        oran = data.Kalite/data.Teslimat
+        y = GrupStratejiOranlariModel('Kalite','Teslimat',oran)
+        temp.append(y.__dict__)
+
+        oran = data.Kalite/data.Memnuniyet
+        y = GrupStratejiOranlariModel('Kalite','Memnuniyet',oran)
+        temp.append(y.__dict__)
+
+        oran = data.Teslimat/data.Memnuniyet
+        y = GrupStratejiOranlariModel('Teslimat','Memnuniyet',oran)
+        temp.append(y.__dict__)
+
     return temp
 
 def GetUstGruplar(Grupid):
