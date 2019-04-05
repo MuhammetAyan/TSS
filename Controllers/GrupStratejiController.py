@@ -10,6 +10,12 @@ def Gruplar(ustGrupid):
     else:
         UnauthorizedError()
 
+@route('/strateji/adres/<grupId>')
+def UstGruplar(grupId):
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(GrupBusiness.GetUstGruplar(grupId))
+    else:
+        UnauthorizedError()
 
 
 @route('/strateji/grafik/<grupId>')
