@@ -25,10 +25,11 @@ def GetUstGruplar(Grupid):
     """
     UstGruplar :list[UstGrupModel] = []
     GrupId = Grupid
-    print(type(GrupId)) #list indices must be integers or slices, not str hatası vriyorint yapıom tipini out of range veriyo
+    print(type(GrupId)) #list indices must be integers or slices, not str hatası vriyorint yapıom tipini out of range veriyo aşşada forda Gruplar yazınca düzeldi biraz anladım ama tam anlamadım
     while GrupId != 0:
         Gruplar: list[dbMalzemeGruplariModel] = select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
         UstGrupId =Gruplar[0].UstGrupId
+
         for grup in Gruplar: # ben buraya Gruplar[GrupId] yazıyordum olmadı ancak boyle yapınca oldu neden ???????????????????????????????????
             ustGrupAdi: list[dbMalzemeGruplariModel] = select("select * from MalzemeGruplari where id = '{}'".format(UstGrupId))
             x = UstGrupModel(grup.UstGrupId,ustGrupAdi[0].GrupAdi)

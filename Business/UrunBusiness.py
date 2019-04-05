@@ -1,4 +1,4 @@
-from Data.DBConnect import select
+from Data.DBConnect import select,query
 from Data.DBModels import *
 from Models import UrunTedarikciBilgileriModel
 from Models.GrupModel import *
@@ -31,6 +31,17 @@ def UrunAdresi(stokkodu):
     Gruplar.append(".")
     Gruplar.reverse()
     return Gruplar
+
+def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
+    """
+    /urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId>
+    Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verilen tedarikçi yapılacak.
+    :param stokkodu:
+    :param TedarikciId:
+    :return:
+    """
+    query("update Urunler set DefTedId = '{}' where StokKodu= '{}'".format(TedarikciId,StokKodu))
+    #return 0  yapmaya gerek varmı bu halde çalışıyor
 
 def TedarikciBilgi(stokkodu):
     Tedarikci: list[dbTedarikUrunleriModel] = select("select * from TedarikUrunleri where StokKodu = '{}'".format(stokkodu))

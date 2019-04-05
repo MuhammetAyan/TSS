@@ -27,3 +27,24 @@ def TedarikciBilgileriGetir(stokkodu):
         return json_dumps(UrunBusiness.TedarikciBilgi(stokkodu))
     else:
         UnauthorizedError()
+
+"""
+/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId> 
+Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verilen tedarikçi yapılacak.
+"""
+@route('/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId>')
+def UrunTedarikciDefaultYap(stokkodu,tedarikciId):
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId))
+    else:
+        UnauthorizedError()
+
+
+
+
+
+
+
+
+
+
