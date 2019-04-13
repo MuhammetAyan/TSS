@@ -30,3 +30,11 @@ def GrupStrateji(grupId):
         return json_dumps(GrupBusiness.GetGrupStratejileri(grupId))
     else:
         UnauthorizedError()
+
+                    #deftedyap fonk tada boyle return yaptım  burda da bi sroun olur mu ?????????????????????????  paket gonder sayfasında yeşil oluyor ama db ye bakıom eklemiyor ?
+@post('/strateji/belirle')
+def StratejiBelirle(GrupId,Maliyet,Kalite,Teslimat,Memnuniyet):
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(GrupBusiness.PostStratejiBelirle(GrupId,Maliyet,Kalite,Teslimat,Memnuniyet))
+    else:
+        UnauthorizedError()

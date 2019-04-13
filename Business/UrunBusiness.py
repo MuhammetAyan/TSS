@@ -1,21 +1,28 @@
-from Data.DBConnect import select,query
+from Data.DBConnect import select, query
 from Data.DBModels import *
-from Models import UrunTedarikciBilgileriModel
-from Models.GrupModel import *
+from Models import UrunTedarikciBilgileriModel, UrunBilgiModel
 
-"""
-def getList(search, GrupId):
-    ""
-    Stok kodu üzerinden ürünleri listeler.
+
+def UrunleriGetir(arama):
+    """
+    [{'stok': 'stok kodu', 'grup': 'grup adı'}]
+    arama metni ile başlayan stok koduna sahip ürünleri ve bağlı olduğu grubun adını döndürür. .
     :param search: Stok kodu.
     :return:
-    ""
-    datalist: list[db] = select("select * from UrunlerGruplar where 'Urunmu'=1 and 'StokKodu' LIKE '{}%' and 'GrupId' = {}".format(search, GrupId))
-    temp = []
-    for data in datalist:
-        temp.append(data.StokKodu)
-    return temp
-"""
+    """
+    datalist: list[dbUrunlerModel] = select("select * from Urunler where StokKodu LIKE '{}%'".format(arama))
+    Urunler : list[UrunBilgiModel] = []
+
+    for urun in datalist:
+        GrupId = urun.GrupId
+        Grup : list[dbMalzemeGruplariModel] = select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
+
+        x = UrunBilgiModel(urun.StokKodu, Grup[0].GrupAdi) #TypeError: 'module' object is not callable hatası ???????????????
+        Urunler.append(x.__dict__)
+
+    return Urunler
+
+
 
 
 def UrunAdresi(stokkodu):
@@ -42,7 +49,8 @@ def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
     :return:
     """
     query("update Urunler set DefTedId = '{}' where StokKodu= '{}'".format(TedarikciId,StokKodu))
-    #return 0  yapmaya gerek varmı bu halde çalışıyor
+
+    #return 0  yapmaya gerek varmı bu halde çalışıyor ??????
 
 def TedarikciBilgi(stokkodu):
     Tedarikci: list[dbTedarikUrunleriModel] = select("select * from TedarikUrunleri where StokKodu = '{}'".format(stokkodu))

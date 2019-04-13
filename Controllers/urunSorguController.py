@@ -39,6 +39,14 @@ def UrunTedarikciDefaultYap(stokkodu,tedarikciId):
     else:
         UnauthorizedError()
 
+"""[{'stok': 'stok kodu', 'grup': 'grup adı'}]
+arama metni ile başlayan stok koduna sahip ürünleri ve bağlı olduğu grubun adını döndürür. """
+@get('/urunlerisorgula/urunler/<arama>')
+def UrunSorgula(arama):
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(UrunBusiness.UrunleriGetir(arama))
+    else:
+        UnauthorizedError()
 
 
 

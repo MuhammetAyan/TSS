@@ -6,7 +6,7 @@ from Network.Security import *
 """arama metnini içeren tedarikçileri listeler.
 (response'da 'defNo' ile bahsedilen bu tedarikçiden kaç tane ürün varsayılan olarak alınıyor.)"""
 
-@route('/tedarikcisorgula/listele/<arama>') #404 hatası veriyor neden sayfayı bulamıyor ???????????????????
+@route('/tedarikcisorgula/listele/<arama>')
 def TedarikciSorgula(arama):
     """
     :param grupId:

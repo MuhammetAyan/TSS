@@ -1,4 +1,4 @@
-from Data.DBConnect import select
+from Data.DBConnect import select, query
 from Data.DBModels import *
 from Models.GrupModel import *
 from Models.GrupStratejilerModel import *
@@ -93,3 +93,10 @@ def GetGrupStratejileri(Grupid):
         temp.append(y.__dict__)
 
     return temp
+
+def PostStratejiBelirle(GrupId,Maliyet,Kalite,Teslimat,Memnuniyet):
+    """
+    Gelen veriler mobil uygulamadan kıyas bilgilerinin AHP matris satır ortalamasından geçmiş halidir. Bu veriler "Stratejiler" tablosuna eklenecek.
+    :return:
+    """
+    query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(GrupId,Maliyet,Kalite,Teslimat,Memnuniyet))
