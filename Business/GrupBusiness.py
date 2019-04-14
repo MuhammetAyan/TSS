@@ -1,4 +1,4 @@
-from Data.DBConnect import select, query
+from Data.DBConnect import DB
 from Data.DBModels import *
 from Models.GrupModel import *
 from Models.GrupStratejilerModel import *
@@ -11,7 +11,7 @@ def getGruplar(ustGrupid):
     :param ustGrupid:
     :return:
     """
-    datalist: list[dbMalzemeGruplariModel] = select("select * from MalzemeGruplari where UstGrupId = {}".format(ustGrupid))
+    datalist: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where UstGrupId = {}".format(ustGrupid))
     temp: list[GrupModel] = []
     for data in datalist:
         x = GrupModel(data.id, data.GrupAdi)
@@ -25,7 +25,7 @@ def GetGrupStratejiOran(Grupid):
     :param Grupid:
     :return:
     """
-    datalist: list[dbGrupStratejilerModel] = select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
+    datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
     temp: list[GrupStratejiOranlariModel] = []
     for data in datalist:
         oran = data.Maliyet/data.Kalite
@@ -64,11 +64,11 @@ def GetUstGruplar(Grupid):
     GrupId = Grupid
     print(type(GrupId)) #list indices must be integers or slices, not str hatası vriyorint yapıom tipini out of range veriyo aşşada forda Gruplar yazınca düzeldi biraz anladım ama tam anlamadım
     while GrupId != 0:
-        Gruplar: list[dbMalzemeGruplariModel] = select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
+        Gruplar: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
         UstGrupId =Gruplar[0].UstGrupId
 
         for grup in Gruplar: # ben buraya Gruplar[GrupId] yazıyordum olmadı ancak boyle yapınca oldu neden ???????????????????????????????????
-            ustGrupAdi: list[dbMalzemeGruplariModel] = select("select * from MalzemeGruplari where id = '{}'".format(UstGrupId))
+            ustGrupAdi: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(UstGrupId))
             x = UstGrupModel(grup.UstGrupId,ustGrupAdi[0].GrupAdi)
             UstGruplar.append(x.__dict__)
 
@@ -77,7 +77,7 @@ def GetUstGruplar(Grupid):
     return UstGruplar
 
 def GetGrupStratejileri(Grupid):
-    datalist: list[dbGrupStratejilerModel] = select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
+    datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
     temp: list[GrupStratejilerModel] = []
     for data in datalist:
         y = GrupStratejilerModel('Maliyet',data.Maliyet)

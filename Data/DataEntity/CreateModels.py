@@ -1,11 +1,11 @@
-from Data.DBConnect import select
+from Data.DBConnect import DB
 
 
 def CreateModels():
     global temp
     f = open("../DBModels.py", mode="w", encoding="utf8")
     print("Modeller oluşturuluyor...")
-    temp = "import Data.DBConnect\n"
+    temp = ""
     imports = []
 
     def WriteClass(name: str):
@@ -40,7 +40,7 @@ def CreateModels():
     def addInsert(columns:str, table:str):
         global temp
         temp += "\n\tdef insert(self):\n"
-        temp += """\t\tData.DBConnect.query(\"\"\"INSERT INTO {} ("""
+        temp += """\t\tDB.query(\"\"\"INSERT INTO {} ("""
         for col in columns:
             if str(col[0]) != "id":
                 temp += str(col[0]) + ", "
@@ -58,7 +58,7 @@ def CreateModels():
     def addUpdate(columns:str, table:str):
         global temp
         temp += "\n\tdef update(self):\n"
-        temp += """\t\tData.DBConnect.query(\"\"\"UPDATE {} SET """
+        temp += """\t\tDB.query(\"\"\"UPDATE {} SET """
         for col in columns:
             if str(col[0]) != "id":
                 temp += str(col[0]) + "='{}'" + ", "
@@ -73,22 +73,22 @@ def CreateModels():
     def addDelete(table:str):
         global temp
         temp += "\n\tdef delete(self):\n"
-        temp += """\t\tData.DBConnect.query(\"\"\"DELETE FROM """ + str(table[0]) + """ WHERE id = {}\"\"\".format(self.id))\n\n"""
+        temp += """\t\tDB.query(\"\"\"DELETE FROM """ + str(table[0]) + """ WHERE id = {}\"\"\".format(self.id))\n\n"""
 
-    tables = select("select name, object_id from sys.tables WHERE type = 'U'", IsFree=True)
+    tables = DB.select("select name, object_id from sys.tables WHERE type = 'U'", IsFree=True)
     n = 0
     for table in tables:
         WriteClass(table[0])
         n += 1
-        columns = select("select name, /*max_length,*/ (select name from sys.types WHERE user_type_id = sys.all_columns.user_type_id)userType from sys.all_columns WHERE object_id=" + str(table[1]), IsFree=True)
+        columns = DB.select("select name, /*max_length,*/ (select name from sys.types WHERE user_type_id = sys.all_columns.user_type_id)userType from sys.all_columns WHERE object_id=" + str(table[1]), IsFree=True)
         i = 0
         for col in columns:
             WriteAtt(col, i)
             i += 1
 
-        addInsert(columns, table)
-        addUpdate(columns, table)
-        addDelete(table)
+        # addInsert(columns, table)
+        # addUpdate(columns, table)
+        # addDelete(table)
 
     print()
     for imp in imports:

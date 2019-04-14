@@ -1,4 +1,4 @@
-from Data.DBConnect import select
+from Data.DBConnect import DB
 from Data.DBModels import dbKullanicilarModel
 
 
@@ -9,7 +9,7 @@ def FindLogin(username: str, password: str)->dbKullanicilarModel:
     :param password: Şifre
     :return:
     """
-    users: list[dbKullanicilarModel] = select("select * from Kullanicilar where KullaniciAdi = '{}' and Sifre = '{}'".format(username, password))
+    users: list[dbKullanicilarModel] = DB.select("select * from Kullanicilar where KullaniciAdi = '{}' and Sifre = '{}'".format(username, password))
     for user in users:
         print("Kullanicilar:", user)
     if len(users) == 1:
