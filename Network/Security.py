@@ -68,7 +68,7 @@ def UnauthorizedError(message="Yetkisiz erişim!"):
     :param message: Hata mesajı default:"Yetkisiz erişim!"
     :return:
     """
-    return abort(401, text=message)
+    return abort(403, text=message)
 
 
 def KeyGenerator():

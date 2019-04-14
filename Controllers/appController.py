@@ -8,6 +8,9 @@ print("appController")
 @route('/app/optimizasyon')
 def hesapla():
     if IsAllow(request, Roller.Admin):
+        # Test amaçlı 5 sn gecikme sağlanmıştır.
+        import time
+        time.sleep(5)
         print("hesapla başarılı erişim")
         return ""
     else:
