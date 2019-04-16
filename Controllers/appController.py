@@ -1,5 +1,6 @@
 from Network.bottle import request, json_dumps, route, abort
 from Network.Security import *
+from Business import AppBusiness
 import time
 
 print("appController")
@@ -20,7 +21,7 @@ def hesapla():
 @route('/app/grafik')
 def rate():
     if IsAllow(request, Roller.TumHesaplar):
-        print("oran: ", 90)
-        return json_dumps({"oran": 90})
+        oran = float(AppBusiness.OranGrafigi())
+        return json_dumps({"oran" : oran})
     else:
         UnauthorizedError()
