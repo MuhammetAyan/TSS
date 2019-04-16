@@ -27,10 +27,11 @@ def TedarikciUrunleri(tedarikciId):   #burada urunid yerine stok kodunu geri dö
     """
     Tedarikçi sorgulamada bir tedarikçinin bilgileri gösterilirken tedarikçinin sattığı ürünler ve
     bu ürünlerden hangilerini varsayılan olarak aldığımızı göstermek için bu servis kullanılacak.
-     [{'urunId': 1, 'UrunAdi': 'Ürün adı', 'AHP': 24.3, 'AHPSira': 2, 'default': true}]
+     [{'StokKodu': 'stokkodu', 'UrunAdi': 'Ürün adı', 'AHP': 24.3, 'AHPSira': 2, 'default': true}]
     :param tedarikciId:
     :return:
     """
+    tedarikciId = int(tedarikciId)
     TedarikciUrunleriListe : list[tum.TedarikciUrunleriModel] = []
     TedarikciUrun : list[dbTedarikUrunleriModel] = DB.select("select * from TedarikUrunleri where TedarikciId = '{}'".format(tedarikciId))
 
@@ -38,7 +39,6 @@ def TedarikciUrunleri(tedarikciId):   #burada urunid yerine stok kodunu geri dö
 
         StokKodu = TedarikciUrunu.StokKodu
         Urunler : list[dbUrunlerModel] = DB.select("select * from Urunler where StokKodu = '{}'".format(StokKodu))
-        UrunId = Urunler[0].id
         UrunAdi = Urunler[0].StokAdi
         DefTedId = Urunler[0].DefTedId
 
@@ -52,12 +52,9 @@ def TedarikciUrunleri(tedarikciId):   #burada urunid yerine stok kodunu geri dö
         AhpSira= DB.select("select AHPUyumSirasi from sonuclar where TedarikciId = '{}'".format(tedarikciId),True)
         AhpSira= AhpSira[0][0] if len(AhpSira) > 0 else 0
 
-        if DefTedId == tedarikciId:
-            Default = True
-        else:
-            Default = False
+        Default = DefTedId == tedarikciId
 
-        x = tum.TedarikciUrunleriModel(UrunId,UrunAdi,AhpPuan,AhpSira,Default)
+        x = tum.TedarikciUrunleriModel(StokKodu,UrunAdi,AhpPuan,AhpSira,Default)
         TedarikciUrunleriListe.append(x.__dict__)
 
     return TedarikciUrunleriListe

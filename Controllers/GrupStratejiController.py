@@ -31,10 +31,17 @@ def GrupStrateji(grupId):
     else:
         UnauthorizedError()
 
-           # paket gonder sayfasında yeşil oluyor ama db ye bakıom eklemiyor ?
+
 @post('/strateji/belirle')
-def StratejiBelirle(id,tip,maliyet,kalite,teslimat,memnuniyet):
+def StratejiBelirle():
     if IsAllow(request, Roller.TumHesaplar):
+        id = request.json.get('id')
+        tip = request.json.get('tip')
+        maliyet = request.json.get('maliyet')
+        kalite = request.json.get('kalite')
+        teslimat= request.json.get('teslimat')
+        memnuniyet= request.json.get('memnuniyet')
+
         GrupBusiness.PostStratejiBelirle(id,tip,maliyet,kalite,teslimat,memnuniyet)
     else:
         UnauthorizedError()

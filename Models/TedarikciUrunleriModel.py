@@ -5,9 +5,9 @@ bu ürünlerden hangilerini varsayılan olarak aldığımızı göstermek için 
 """
 
 class TedarikciUrunleriModel:
-    def __init__(self, urunId,UrunAdi,AHP,AHPSira,default):
-        self.urunId: int = urunId
+    def __init__(self, StokKodu,UrunAdi,AHP,AHPSira,Default):
+        self.StokKodu: int = StokKodu
         self.UrunAdi: str = UrunAdi
         self.AHP: float = AHP
         self.AHPSira: float = AHPSira
-        self.default: bool = default
+        self.Default: bool = Default

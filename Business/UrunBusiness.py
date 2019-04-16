@@ -23,8 +23,6 @@ def UrunleriGetir(arama):
     return Urunler
 
 
-
-
 def UrunAdresi(stokkodu):
     Urun: list[dbUrunlerModel] = DB.select("select top 1 * from Urunler where StokKodu = '{}'".format(stokkodu))
     GrupId = Urun[0].GrupId
@@ -38,6 +36,7 @@ def UrunAdresi(stokkodu):
     Gruplar.append(".")
     Gruplar.reverse()
     return Gruplar
+
 
 
 def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
@@ -54,24 +53,24 @@ def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
 
 
 
-
 def TedarikciBilgi(stokkodu):
     Tedarikci: list[dbTedarikUrunleriModel] = DB.select("select * from TedarikUrunleri where StokKodu = '{}'".format(stokkodu))
 
     TedarikciBilgi : list[tbm.UrunTedarikciBilgileriModel] = []
 
     for Ted in Tedarikci:
+        DefTedId = DB.select("select DefTedId from Urunler where Stokkodu = '{}'".format(stokkodu),True)
 
         Tedid = Ted.TedarikciId
 
-        #TedAdi: list[dbTedarikciModel] = DB.select("select * from Tedarikci where id = '{}'".format(Tedid))
-        #TedAdi2= TedAdi[0].TedarikciAdi
-
         TedAdi = DB.select("select TedarikciAdi from Tedarikci where id = '{}'".format(Tedid),True)
+
         TedAhpPuan = DB.select("select AHPPuan from sonuclar where StokKodu = '{}'".format(Ted.StokKodu),True)
         TedAhpPuan=TedAhpPuan[0][0] if len(TedAhpPuan) > 0 else 0
 
-        x = tbm.UrunTedarikciBilgileriModel(Tedid,TedAdi[0][0],TedAhpPuan,False)
+        Default = Tedid == DefTedId[0][0]
+
+        x = tbm.UrunTedarikciBilgileriModel(Tedid,TedAdi[0][0],TedAhpPuan,Default)
         TedarikciBilgi.append(x.__dict__)
 
     return TedarikciBilgi
