@@ -18,3 +18,17 @@ def TedarikciSorgula(arama):
     else:
         UnauthorizedError()
 
+
+
+@route('/tedarikcisorgula/tedarikci/<tedarikciId>')
+def TedarikciSorgula(tedarikciId):
+    """
+    Tedarikçi sorgulamada bir tedarikçinin bilgileri gösterilirken tedarikçinin sattığı ürünler ve
+    bu ürünlerden hangilerini varsayılan olarak aldığımızı göstermek için bu servis kullanılacak.
+    :param tedarikciId:
+    :return:
+    """
+    if IsAllow(request, Roller.TumHesaplar):
+        return json_dumps(TedarikciBusiness.TedarikciUrunleri(tedarikciId))
+    else:
+        UnauthorizedError()

@@ -1,7 +1,7 @@
 from Data.DBConnect import DB
 from Data.DBModels import *
-from Models import UrunTedarikciBilgileriModel, UrunBilgiModel
-
+import Models.UrunBilgiModel as ubm
+import Models.UrunTedarikciBilgileriModel as tbm
 
 def UrunleriGetir(arama):
     """
@@ -11,13 +11,13 @@ def UrunleriGetir(arama):
     :return:
     """
     datalist: list[dbUrunlerModel] = DB.select("select * from Urunler where StokKodu LIKE '{}%'".format(arama))
-    Urunler : list[UrunBilgiModel] = []
+    Urunler : list[ubm.UrunBilgiModel] = []
 
     for urun in datalist:
         GrupId = urun.GrupId
         Grup : list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
 
-        x = UrunBilgiModel(urun.StokKodu, Grup[0].GrupAdi) #TypeError: 'module' object is not callable hatası ???????????????
+        x = ubm.UrunBilgiModel(urun.StokKodu, Grup[0].GrupAdi)
         Urunler.append(x.__dict__)
 
     return Urunler
@@ -52,45 +52,29 @@ def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
 
     #return 0  yapmaya gerek varmı bu halde çalışıyor ??????
 
+
+
+
 def TedarikciBilgi(stokkodu):
     Tedarikci: list[dbTedarikUrunleriModel] = DB.select("select * from TedarikUrunleri where StokKodu = '{}'".format(stokkodu))
-    print('tedarikciiddd:',len(Tedarikci))
-    TedarikciBilgi : list[UrunTedarikciBilgileriModel] = []
-    TedarikcilerBilgileri = []
-    for i in range(0,len(Tedarikci)-1):
 
-        Tedid = Tedarikci[i].TedarikciId
+    TedarikciBilgi : list[tbm.UrunTedarikciBilgileriModel] = []
 
+    for Ted in Tedarikci:
 
-        TedAdi: list[dbTedarikciModel] = DB.select("select * from Tedarikci where id = '{}'".format(Tedid))
-        TedAdi2= TedAdi[0].TedarikciAdi
-        #print('tedadii2:',TedAdi2)
+        Tedid = Ted.TedarikciId
 
-        """
-        TedAhp : list[dbSonuclarModel] = select("select * from Sonuclar where TedarikciId = '{}' and StokKodu = '{}' ".format(Tedid, stokkodu))
-        TedAhp2 = TedAhp[0].AHPPuan
-        print('tedaahp:',TedAhp2)
+        #TedAdi: list[dbTedarikciModel] = DB.select("select * from Tedarikci where id = '{}'".format(Tedid))
+        #TedAdi2= TedAdi[0].TedarikciAdi
 
-        
-        TedA = select(("select TedarikciAdi from Tedarikci where id = '{}'".format(Tedid)),True)
-        print('teda:',TedA)
-        
-        """
-        #x = UrunTedarikciBilgileriModel(Tedid,TedAdi2,5,False)
-        #TedarikciBilgi.append(x)
+        TedAdi = DB.select("select TedarikciAdi from Tedarikci where id = '{}'".format(Tedid),True)
+        TedAhpPuan = DB.select("select AHPPuan from sonuclar where StokKodu = '{}'".format(Ted.StokKodu),True)
+        TedAhpPuan=TedAhpPuan[0][0] if len(TedAhpPuan) > 0 else 0
 
-        TedarikciBilgi.append(Tedid)
-        #print('tedbilgielr1:',TedarikciBilgi)
+        x = tbm.UrunTedarikciBilgileriModel(Tedid,TedAdi[0][0],TedAhpPuan,False)
+        TedarikciBilgi.append(x.__dict__)
 
-        TedarikciBilgi.append(TedAdi2)
-        #print('tedbilgielr2:',TedarikciBilgi)
-
-        TedarikcilerBilgileri.append(TedarikciBilgi)
-        TedarikciBilgi = []
-
-
-
-    return TedarikcilerBilgileri
+    return TedarikciBilgi
 
 
 

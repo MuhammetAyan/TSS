@@ -74,6 +74,7 @@ def GetUstGruplar(Grupid):
 
         GrupId = UstGrupId
 
+    UstGruplar.reverse()
     return UstGruplar
 
 def GetGrupStratejileri(Grupid):
@@ -94,9 +95,11 @@ def GetGrupStratejileri(Grupid):
 
     return temp
 
-def PostStratejiBelirle(GrupId,Maliyet,Kalite,Teslimat,Memnuniyet):
+def PostStratejiBelirle(id,tip,maliyet,kalite,teslimat,memnuniyet):
     """
     Gelen veriler mobil uygulamadan kıyas bilgilerinin AHP matris satır ortalamasından geçmiş halidir. Bu veriler "Stratejiler" tablosuna eklenecek.
     :return:
     """
-    query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(GrupId,Maliyet,Kalite,Teslimat,Memnuniyet))
+
+    if tip == 'grup':
+        DB.query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(id,maliyet,kalite,teslimat,memnuniyet))

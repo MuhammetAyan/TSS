@@ -35,7 +35,7 @@ Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verile
 @route('/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId>')
 def UrunTedarikciDefaultYap(stokkodu,tedarikciId):
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId))
+        UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId)
     else:
         UnauthorizedError()
 
