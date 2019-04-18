@@ -1,4 +1,3 @@
-from Data.DBConnect import DB
 from Data.DBModels import *
 import Models.UrunBilgiModel as ubm
 import Models.UrunTedarikciBilgileriModel as tbm

@@ -1,4 +1,4 @@
-from Data.DBConnect import DB
+from Data.DBModels import DB
 import Models.AppModel as apm
 
 

@@ -1,4 +1,5 @@
 import datetime
+from .DBConnect import DB
 
 
 class dbGrupStratejilerModel(object):
@@ -10,6 +11,17 @@ class dbGrupStratejilerModel(object):
 		self.Teslimat: float = data[4]
 		self.Memnuniyet: float = data[5]
 
+	def insert(self):
+		DB.query("""INSERT INTO {} (GrupId, Maliyet, Kalite, Teslimat, Memnuniyet) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("GrupStratejiler", self.GrupId, self.Maliyet, self.Kalite, self.Teslimat, self.Memnuniyet))
+		self.id = DB.select("SELECT TOP 1 id FROM GrupStratejiler ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET GrupId='{}', Maliyet='{}', Kalite='{}', Teslimat='{}', Memnuniyet='{}' WHERE id = {}""".format("GrupStratejiler", self.GrupId, self.Maliyet, self.Kalite, self.Teslimat, self.Memnuniyet, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM GrupStratejiler WHERE id = {}""".format(self.id))
+
+
 
 class dbKullanicilarModel(object):
 	def __init__(self, data: tuple):
@@ -18,43 +30,16 @@ class dbKullanicilarModel(object):
 		self.Sifre: str = data[2]
 		self.Rol: str = data[3]
 
+	def insert(self):
+		DB.query("""INSERT INTO {} (KullaniciAdi, Sifre, Rol) VALUES ('{}', '{}', '{}')""".format("Kullanicilar", self.KullaniciAdi, self.Sifre, self.Rol))
+		self.id = DB.select("SELECT TOP 1 id FROM Kullanicilar ORDER BY id DESC", True)[0][0]
 
-class dbUrunlerModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.StokAdi: str = data[2]
-		self.GrupId: int = data[3]
-		self.DefTedId: int = data[4]
+	def update(self):
+		DB.query("""UPDATE {} SET KullaniciAdi='{}', Sifre='{}', Rol='{}' WHERE id = {}""".format("Kullanicilar", self.KullaniciAdi, self.Sifre, self.Rol, self.id))
 
+	def delete(self):
+		DB.query("""DELETE FROM Kullanicilar WHERE id = {}""".format(self.id))
 
-class dbSonuclarModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.AHPPuan: float = data[3]
-		self.AHPUyumSirasi: int = data[4]
-
-
-class dbMalzemeGruplariModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.GrupAdi: str = data[1]
-		self.UstGrupId: int = data[2]
-
-
-class dbUrunTedarikciModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.MaliyetPuan: float = data[3]
-		self.MaliyetAdet: float = data[4]
-		self.KalitePuan: float = data[5]
-		self.KaliteAdet: float = data[6]
-		self.TeslimatPuan: float = data[7]
-		self.TeslimatAdet: float = data[8]
 
 
 class dbMalKabulModel(object):
@@ -69,6 +54,113 @@ class dbMalKabulModel(object):
 		self.Tarih: datetime.datetime = data[7]
 		self.Adet: int = data[8]
 
+	def insert(self):
+		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan, Tarih, Adet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih, self.Adet))
+		self.id = DB.select("SELECT TOP 1 id FROM MalKabul ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', MaliyetPuan='{}', KalitePuan='{}', TeslimatPuan='{}', MemnuniyetPuan='{}', Tarih='{}', Adet='{}' WHERE id = {}""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih, self.Adet, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM MalKabul WHERE id = {}""".format(self.id))
+
+
+
+class dbMalzemeGruplariModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.GrupAdi: str = data[1]
+		self.UstGrupId: int = data[2]
+
+	def insert(self):
+		DB.query("""INSERT INTO {} (GrupAdi, UstGrupId) VALUES ('{}', '{}')""".format("MalzemeGruplari", self.GrupAdi, self.UstGrupId))
+		self.id = DB.select("SELECT TOP 1 id FROM MalzemeGruplari ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET GrupAdi='{}', UstGrupId='{}' WHERE id = {}""".format("MalzemeGruplari", self.GrupAdi, self.UstGrupId, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM MalzemeGruplari WHERE id = {}""".format(self.id))
+
+
+
+class dbSonuclarModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.TedarikciId: int = data[2]
+		self.AHPPuan: float = data[3]
+		self.AHPUyumSirasi: int = data[4]
+
+	def insert(self):
+		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, AHPPuan, AHPUyumSirasi) VALUES ('{}', '{}', '{}', '{}')""".format("Sonuclar", self.StokKodu, self.TedarikciId, self.AHPPuan, self.AHPUyumSirasi))
+		self.id = DB.select("SELECT TOP 1 id FROM Sonuclar ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', AHPPuan='{}', AHPUyumSirasi='{}' WHERE id = {}""".format("Sonuclar", self.StokKodu, self.TedarikciId, self.AHPPuan, self.AHPUyumSirasi, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM Sonuclar WHERE id = {}""".format(self.id))
+
+
+
+class dbTedarikciModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.TedarikciAdi: str = data[1]
+		self.Memnuniyet: float = data[2]
+		self.MemnuniyetAdedi: float = data[3]
+
+	def insert(self):
+		DB.query("""INSERT INTO {} (TedarikciAdi, Memnuniyet, MemnuniyetAdedi) VALUES ('{}', '{}', '{}')""".format("Tedarikci", self.TedarikciAdi, self.Memnuniyet, self.MemnuniyetAdedi))
+		self.id = DB.select("SELECT TOP 1 id FROM Tedarikci ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET TedarikciAdi='{}', Memnuniyet='{}', MemnuniyetAdedi='{}' WHERE id = {}""".format("Tedarikci", self.TedarikciAdi, self.Memnuniyet, self.MemnuniyetAdedi, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM Tedarikci WHERE id = {}""".format(self.id))
+
+
+
+class dbTedarikUrunleriModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.TedarikciId: int = data[2]
+		self.BirimFiyat: float = data[3]
+
+	def insert(self):
+		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, BirimFiyat) VALUES ('{}', '{}', '{}')""".format("TedarikUrunleri", self.StokKodu, self.TedarikciId, self.BirimFiyat))
+		self.id = DB.select("SELECT TOP 1 id FROM TedarikUrunleri ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', BirimFiyat='{}' WHERE id = {}""".format("TedarikUrunleri", self.StokKodu, self.TedarikciId, self.BirimFiyat, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM TedarikUrunleri WHERE id = {}""".format(self.id))
+
+
+
+class dbUrunlerModel(object):
+	def __init__(self, data: tuple):
+		self.id: int = data[0]
+		self.StokKodu: str = data[1]
+		self.StokAdi: str = data[2]
+		self.GrupId: int = data[3]
+		self.DefTedId: int = data[4]
+
+	def insert(self):
+		DB.query("""INSERT INTO {} (StokKodu, StokAdi, GrupId, DefTedId) VALUES ('{}', '{}', '{}', '{}')""".format("Urunler", self.StokKodu, self.StokAdi, self.GrupId, self.DefTedId))
+		self.id = DB.select("SELECT TOP 1 id FROM Urunler ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET StokKodu='{}', StokAdi='{}', GrupId='{}', DefTedId='{}' WHERE id = {}""".format("Urunler", self.StokKodu, self.StokAdi, self.GrupId, self.DefTedId, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM Urunler WHERE id = {}""".format(self.id))
+
+
 
 class dbUrunStratejilerModel(object):
 	def __init__(self, data: tuple):
@@ -79,27 +171,48 @@ class dbUrunStratejilerModel(object):
 		self.TeslimatPuan: float = data[4]
 		self.MemnuniyetPuan: float = data[5]
 
+	def insert(self):
+		DB.query("""INSERT INTO {} (StokKodu, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("UrunStratejiler", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan))
+		self.id = DB.select("SELECT TOP 1 id FROM UrunStratejiler ORDER BY id DESC", True)[0][0]
 
-class dbTedarikciModel(object):
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.TedarikciAdi: str = data[1]
-		self.Memnuniyet: float = data[2]
-		self.MemnuniyetAdedi: float = data[3]
+	def update(self):
+		DB.query("""UPDATE {} SET StokKodu='{}', MaliyetPuan='{}', KalitePuan='{}', TeslimatPuan='{}', MemnuniyetPuan='{}' WHERE id = {}""".format("UrunStratejiler", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.id))
 
-
-class dbsysdiagramsModel(object):
-	def __init__(self, data: tuple):
-		self.name: object = data[0]
-		self.principal_id: int = data[1]
-		self.diagram_id: int = data[2]
-		self.version: int = data[3]
-		self.definition: object = data[4]
+	def delete(self):
+		DB.query("""DELETE FROM UrunStratejiler WHERE id = {}""".format(self.id))
 
 
-class dbTedarikUrunleriModel(object):
+
+class dbUrunTedarikciModel(object):
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
 		self.TedarikciId: int = data[2]
-		self.BirimFiyat: float = data[3]
+		self.MaliyetPuan: float = data[3]
+		self.MaliyetAdet: float = data[4]
+		self.KalitePuan: float = data[5]
+		self.KaliteAdet: float = data[6]
+		self.TeslimatPuan: float = data[7]
+		self.TeslimatAdet: float = data[8]
+
+	def insert(self):
+		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, MaliyetAdet, KalitePuan, KaliteAdet, TeslimatPuan, TeslimatAdet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet, self.TeslimatPuan, self.TeslimatAdet))
+		self.id = DB.select("SELECT TOP 1 id FROM UrunTedarikci ORDER BY id DESC", True)[0][0]
+
+	def update(self):
+		DB.query("""UPDATE {} SET StokKodu='{}', TedarikciId='{}', MaliyetPuan='{}', MaliyetAdet='{}', KalitePuan='{}', KaliteAdet='{}', TeslimatPuan='{}', TeslimatAdet='{}' WHERE id = {}""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet, self.TeslimatPuan, self.TeslimatAdet, self.id))
+
+	def delete(self):
+		DB.query("""DELETE FROM UrunTedarikci WHERE id = {}""".format(self.id))
+
+
+DB.Models.update({'dbGrupStratejilerModel': dbGrupStratejilerModel})
+DB.Models.update({'dbKullanicilarModel': dbKullanicilarModel})
+DB.Models.update({'dbMalKabulModel': dbMalKabulModel})
+DB.Models.update({'dbMalzemeGruplariModel': dbMalzemeGruplariModel})
+DB.Models.update({'dbSonuclarModel': dbSonuclarModel})
+DB.Models.update({'dbTedarikciModel': dbTedarikciModel})
+DB.Models.update({'dbTedarikUrunleriModel': dbTedarikUrunleriModel})
+DB.Models.update({'dbUrunlerModel': dbUrunlerModel})
+DB.Models.update({'dbUrunStratejilerModel': dbUrunStratejilerModel})
+DB.Models.update({'dbUrunTedarikciModel': dbUrunTedarikciModel})

@@ -1,5 +1,4 @@
-from Data.DBConnect import DB
-from Data.DBModels import dbKullanicilarModel
+from Data.DBModels import dbKullanicilarModel, DB
 
 
 def FindLogin(username: str, password: str)->dbKullanicilarModel:

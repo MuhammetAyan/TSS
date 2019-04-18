@@ -5,7 +5,7 @@ def CreateModels():
     global temp
     f = open("../DBModels.py", mode="w", encoding="utf8")
     print("Modeller oluşturuluyor...")
-    temp = ""
+    temp = "from .DBConnect import DB\n"
     imports = []
 
     def WriteClass(name: str):
@@ -54,6 +54,7 @@ def CreateModels():
                 temp += "self." + str(col[0]) + ", "
         temp = temp[:-2]
         temp += "))\n"
+        temp += """\t\tself.id = DB.select("SELECT TOP 1 id FROM {} ORDER BY id DESC", True)[0][0]\n""".format(table[0])
 
     def addUpdate(columns:str, table:str):
         global temp
@@ -75,6 +76,13 @@ def CreateModels():
         temp += "\n\tdef delete(self):\n"
         temp += """\t\tDB.query(\"\"\"DELETE FROM """ + str(table[0]) + """ WHERE id = {}\"\"\".format(self.id))\n\n"""
 
+    def exportModels(tables):
+        global temp
+        temp += "\n"
+        for table in tables:
+            dbnamemodel = "db{}Model".format(table[0])
+            temp += "DB.Models.update({" + "'{}': {}".format(dbnamemodel, dbnamemodel) + "})\n"
+
     tables = DB.select("select name, object_id from sys.tables WHERE type = 'U'", IsFree=True)
     n = 0
     for table in tables:
@@ -86,9 +94,11 @@ def CreateModels():
             WriteAtt(col, i)
             i += 1
 
-        # addInsert(columns, table)
-        # addUpdate(columns, table)
-        # addDelete(table)
+        addInsert(columns, table)
+        addUpdate(columns, table)
+        addDelete(table)
+
+    exportModels(tables)
 
     print()
     for imp in imports:

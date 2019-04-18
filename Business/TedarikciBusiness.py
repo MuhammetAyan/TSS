@@ -1,4 +1,3 @@
-from Data.DBConnect import DB
 from Data.DBModels import *
 import Models.TedarikciModel as tm
 import Models.TedarikciUrunleriModel as tum

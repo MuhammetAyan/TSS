@@ -1,4 +1,3 @@
-from Data.DBConnect import DB
 from Data.DBModels import *
 from Models.GrupModel import *
 from Models.GrupStratejilerModel import *

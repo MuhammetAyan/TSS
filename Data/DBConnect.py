@@ -1,9 +1,9 @@
 import pyodbc as db
-from Data.DBModels import *
 
 
 class DB:
 
+    Models = {}
     connectionString = "Driver={SQL Server};" \
                        "Server=(local);" \
                        "Database=TSSDB;" \
@@ -49,7 +49,7 @@ class DB:
                         modelname += c
                     else:
                         break
-                return eval("db" + modelname + "Model")
+                return eval("DB.Models['db" + modelname + "Model']")
             for row in cursor.fetchall():
                 # result.append(dbModel(row))
                 result.append(FindModel(sql)(row))
