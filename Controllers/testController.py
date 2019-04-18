@@ -49,6 +49,7 @@ def query():
         data: list[tuple] = DB.select(q, True)
         for i in range(len(data)):
             data[i] = list(data[i])
+        print(data)
         return json.dumps(data)
     else:
         DB.query(q)

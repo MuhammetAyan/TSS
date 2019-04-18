@@ -5,6 +5,7 @@
     <title>TSS QUERY</title>
     <link rel="stylesheet" href="./bootstrap.min.css">
     <script src="./angular.min.js"></script>
+    <script src="./jquery-3.3.1.min.js"></script>
     <script>
         var app = angular.module('app', []);
         app.controller('ctrl', function($scope, $http) {
@@ -35,7 +36,16 @@
                         "Content-Type":"application/json",
                     }
                  }).then(function mySuccess(response) {
-                    $scope.table = response.data;
+                    //load
+                    $('#table').html('')
+                    response.data.forEach(row=> {
+                        $('#table').append("<tr>")
+                        row.forEach(col=>{
+                            $('#table').append("<td>" + col + "</td>")
+                        });
+                        $('#table').append("</tr>")
+                    });
+
                  }, function myError(response) {
                     alert("HATA: Sorguda bir hata oluştu.");
                  });
@@ -53,6 +63,7 @@
 </head>
 <body ng-app="app" ng-controller="ctrl">
     <p><textarea class="form-control" ng-model="query"></textarea></p>
+    <small><b>Hazır Kodlar:</b></small>
     <div class="input-group">
         <select ng-model="tablename" ng-change="colchange()" class="form-control" ng-placeholder="Tablo Adı">
             <option ng-repeat="t in tablelist">{{t.name}}</option>
@@ -73,7 +84,7 @@
         <h3>Sonuçlar</h3><hr class="w-50">
     </div>
     <table class="table">
-        <tbody>
+        <tbody id="table">
             <tr ng-repeat="row in table">
                 <td ng-repeat="col in row">{{col}}</td>
             </tr>

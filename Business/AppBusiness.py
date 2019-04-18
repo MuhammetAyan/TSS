@@ -1,4 +1,5 @@
 from Data.DBConnect import DB
+import Models.AppModel as apm
 
 
 def OranGrafigi():

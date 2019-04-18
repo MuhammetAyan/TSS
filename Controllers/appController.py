@@ -23,6 +23,6 @@ def hesapla():
 def rate():
     if IsAllow(request, Roller.TumHesaplar):
         oran = float(AppBusiness.OranGrafigi())
-        return json_dumps({"oran" : oran})
+        return json_dumps({"oran": oran})
     else:
         UnauthorizedError()
