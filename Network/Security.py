@@ -50,6 +50,7 @@ def IsAllow(req: request, role: Rol):
                 return True
             else:
                 return False
+    abort(code=401, text="Bağlantınız zaman aşımına uğramış!")
     return False
 
 
