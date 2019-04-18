@@ -1,7 +1,8 @@
 from Network.bottle import route, static_file, post, request,get, response,redirect
 import json
+from Test import TEST
 
-print("testController")
+TEST("testController")
 """
 Bu dosya test dosyasıdır. Gerçek projeye dahil değildir.
 """
@@ -20,26 +21,20 @@ def test(filename="index.html"):
 
 @post('/saveservices')
 def save():
-    print("save")
+    TEST("save")
     fs = open("./Data/WebServices.json", mode="w", encoding="UTF-8")
     data = {'services': request.json.get('services')}
-    print(data)
     fs.write(json.dumps(data))
     fs.close()
 
 
 @get('/loadservices')
 def load():
-    print('load')
+    TEST('load')
     fs = open("./Data/WebServices.json", mode="r", encoding="UTF-8")
     data = fs.read()
-    print("data", data)
     fs.close()
     response.set_header("Content-Type", "application/json")
-    print(json.loads(data, encoding="UTF-8"))
+    TEST(json.loads(data, encoding="UTF-8"))
     return json.loads(str(data), encoding="UTF-8")
 
-
-@get('/mobil')
-def mobil():
-    return json.dumps({'veri': 123})

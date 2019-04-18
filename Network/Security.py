@@ -1,6 +1,7 @@
 from Network.bottle import *
 import secrets
 from threading import Thread, Event
+from Test import TEST
 
 __UsersVaribles__ = []
 
@@ -36,30 +37,19 @@ def IsAllow(req: request, role: Rol):
     :return:
     """
     key = req.get_header("auth", "")
-    print("key:", "'" + key + "'")
+    TEST("gelen auth key: '{}'".format(key))
     if role.roles.__contains__(Roller.Misafir.roles[0]) and key == "":
-        print("Allow misafir")
+        TEST("misafir yetkisi verildi")
         return True
     for user in __UsersVaribles__:
         if user.key == key:
-            print(role.roles, user.rol.roles[0])
+            TEST(role.roles, user.rol.roles[0])
             if role.roles.__contains__(user.rol.roles[0]):
-                print("Allow", key)
+                TEST("'{}' yetkisi verildi.".format(user.rol.roles[0]))
                 return True
             else:
                 return False
     return False
-"""
-    username = req.get_cookie("account", secret='some-secret-key')
-    if role.roles.__contains__(Roller.Misafir.roles[0]) and username == None:
-        return True
-
-    users: list[dbKullanicilarModel] = select("select * from Kullanicilar where KullaniciAdi='{}'".format(username))
-    if len(users) == 1:
-        if role.roles.__contains__(users[0].Rol):
-            return True
-    return False
-"""
 
 
 def UnauthorizedError(message="Yetkisiz erişim!"):
@@ -94,6 +84,7 @@ def DeleteUser(key):
             user.delete()
             break
 
+
 class Timer(Thread):
     def __init__(self, event):
         Thread.__init__(self)
@@ -104,11 +95,11 @@ class Timer(Thread):
             for user in __UsersVaribles__:
                 user.time -= 1
                 if user.time <= 0:
-                    print("deleting", user.username, user.key, user.rol)
+                    TEST("Kullanıcı çıkarıldı: ", user.username)
                     user.delete()
 
 
 stopFlag = Event()
 thread = Timer(stopFlag)
 thread.start()
-#stopFlag.set()
+# stopFlag.set()

@@ -5,7 +5,7 @@ from Controllers.testController import *
 from Controllers.GrupStratejiController import *
 from Controllers.TedarikciSorguController import *
 from Network.runserver import runserver
+from socket import gethostbyname, gethostname
 
 
-
-runserver("localhost", 8080)
+runserver(gethostbyname(gethostname()), 8080)
