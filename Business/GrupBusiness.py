@@ -4,6 +4,7 @@ from Models.GrupModel import *
 from Models.GrupStratejilerModel import *
 from Models.UstGrupModel import *
 from Models.GrupStratejiOranlariModel import *
+from Test import TEST
 
 def getGruplar(ustGrupid):
     """
@@ -62,15 +63,15 @@ def GetUstGruplar(Grupid):
     """
     UstGruplar :list[UstGrupModel] = []
     GrupId = Grupid
-    print(type(GrupId)) #list indices must be integers or slices, not str hatası vriyorint yapıom tipini out of range veriyo aşşada forda Gruplar yazınca düzeldi biraz anladım ama tam anlamadım
+    TEST(type(GrupId))  # list indices must be integers or slices, not str hatası vriyorint yapıom tipini out of range veriyo aşşada forda Gruplar yazınca düzeldi biraz anladım ama tam anlamadım
     while GrupId != 0:
-        Gruplar: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
-        UstGrupId =Gruplar[0].UstGrupId
+        gruplar: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
+        UstGrupId = gruplar[0].UstGrupId
 
-        for grup in Gruplar: # ben buraya Gruplar[GrupId] yazıyordum olmadı ancak boyle yapınca oldu neden ???????????????????????????????????
-            ustGrupAdi: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(UstGrupId))
-            x = UstGrupModel(grup.UstGrupId,ustGrupAdi[0].GrupAdi)
-            UstGruplar.append(x.__dict__)
+        grup = gruplar[0]
+        ustGrupAdi: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(UstGrupId))
+        x = UstGrupModel(grup.UstGrupId, ustGrupAdi[0].GrupAdi)
+        UstGruplar.append(x.__dict__)
 
         GrupId = UstGrupId
 
@@ -102,4 +103,5 @@ def PostStratejiBelirle(id,tip,maliyet,kalite,teslimat,memnuniyet):
     """
 
     if tip == 'grup':
+        DB.query("delete GrupStratejiler WHERE GrupId={}".format(id))
         DB.query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(id,maliyet,kalite,teslimat,memnuniyet))

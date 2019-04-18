@@ -5,6 +5,7 @@ from Test import TEST
 
 TEST("GrupStratejiController")
 
+
 @get('/strateji/gruplar/<ustGrupid>')
 def Gruplar(ustGrupid):
     if IsAllow(request, Roller.TumHesaplar):
@@ -13,6 +14,7 @@ def Gruplar(ustGrupid):
     else:
         UnauthorizedError()
 
+
 @route('/strateji/adres/<grupId>')
 def UstGruplar(grupId):
     if IsAllow(request, Roller.TumHesaplar):
@@ -20,12 +22,14 @@ def UstGruplar(grupId):
     else:
         UnauthorizedError()
 
+
 @route('/strateji/stratejigetir/<grupId>')
 def GrupStratejiOran(grupId):
     if IsAllow(request, Roller.TumHesaplar):
         return json_dumps(GrupBusiness.GetGrupStratejiOran(grupId))
     else:
         UnauthorizedError()
+
 
 @route('/strateji/grafik/<grupId>')
 def GrupStrateji(grupId):
@@ -42,9 +46,9 @@ def StratejiBelirle():
         tip = request.json.get('tip')
         maliyet = request.json.get('maliyet')
         kalite = request.json.get('kalite')
-        teslimat= request.json.get('teslimat')
-        memnuniyet= request.json.get('memnuniyet')
+        teslimat = request.json.get('teslimat')
+        memnuniyet = request.json.get('memnuniyet')
 
-        GrupBusiness.PostStratejiBelirle(id,tip,maliyet,kalite,teslimat,memnuniyet)
+        GrupBusiness.PostStratejiBelirle(id, tip, maliyet, kalite, teslimat, memnuniyet)
     else:
         UnauthorizedError()
