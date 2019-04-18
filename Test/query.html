@@ -65,7 +65,7 @@
              <option value="SELECT {{colname}} FROM {{tablename}} WHERE 1=1; ">SELECT</option>
              <option value="INSERT INTO {{tablename}} VALUES ('', ); ">INSERT</option>
              <option value="UPDATE {{tablename}} SET {{colname}}='' WHERE 1=0; ">UPDATE</option>
-             <option value="DELETE FROM {{tablename}} WHERE 1=0; ">DELETE</option>
+             <option value="DELETE FROM {{tablename}} WHERE {{colname}}=''; ">DELETE</option>
         </select>
     </div>
     <button class="btn btn-primary" type="submit" ng-click="submit()">Sorgula</button>

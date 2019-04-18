@@ -45,11 +45,14 @@ def load():
 def query():
     TEST("query")
     q = request.json.get('query')
-    data: list[tuple] = DB.select(q, True)
-    for i in range(len(data)):
-        data[i] = list(data[i])
+    if str(q).strip().lower().startswith("select"):
+        data: list[tuple] = DB.select(q, True)
+        for i in range(len(data)):
+            data[i] = list(data[i])
+        return json.dumps(data)
+    else:
+        DB.query(q)
 
-    return json.dumps(data)
 
 
 @route("/tablelist")
