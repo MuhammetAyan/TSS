@@ -1,6 +1,7 @@
-from Network.bottle import route, static_file, post, request,get, response,redirect
+from Network.bottle import route, static_file, post, request, get, response, redirect
 import json
 from Test import TEST
+from Data.DBConnect import DB
 
 TEST("testController")
 """
@@ -16,6 +17,7 @@ def index():
 @route('/test/')
 @route('/test/<filename>')
 def test(filename="index.html"):
+    TEST("filename", filename)
     return static_file(filename, root="./Test/")
 
 
@@ -38,3 +40,28 @@ def load():
     TEST(json.loads(data, encoding="UTF-8"))
     return json.loads(str(data), encoding="UTF-8")
 
+
+@post('/query')
+def query():
+    TEST("query")
+    q = request.json.get('query')
+    data: list[tuple] = DB.select(q, True)
+    for i in range(len(data)):
+        data[i] = list(data[i])
+
+    return json.dumps(data)
+
+
+@route("/tablelist")
+def tablelist():
+    TEST("tablelist")
+    tablesdata = []
+    tables = DB.select("select name, object_id from sys.tables WHERE type = 'U'", IsFree=True)
+    for table in tables:
+        tab = {'name': table[0], 'cols': []}
+        columns = DB.select("select name, /*max_length,*/ (select name from sys.types WHERE user_type_id = sys.all_columns.user_type_id)userType from sys.all_columns WHERE object_id=" + str(table[1]), IsFree=True)
+        for col in columns:
+            tab["cols"].append(col[0])
+        tablesdata.append(tab)
+    TEST(tablesdata)
+    return json.dumps(tablesdata)

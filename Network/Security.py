@@ -43,6 +43,7 @@ def IsAllow(req: request, role: Rol):
         return True
     for user in __UsersVaribles__:
         if user.key == key:
+            user.refreshTime()  # User için süreyi uzat
             TEST(role.roles, user.rol.roles[0])
             if role.roles.__contains__(user.rol.roles[0]):
                 TEST("'{}' yetkisi verildi.".format(user.rol.roles[0]))
@@ -76,6 +77,13 @@ class UsersVarible:
     def delete(self):
         __UsersVaribles__.remove(self)
         del self
+
+    def refreshTime(self):
+        """
+        Kullanıcının açık kalma süresini yeniden hesaplar.
+        :return:
+        """
+        self.time = 60 * 5
 
 
 def DeleteUser(key):

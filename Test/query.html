@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TSS QUERY</title>
+    <link rel="stylesheet" href="./bootstrap.min.css">
+    <script src="./angular.min.js"></script>
+    <script>
+        var app = angular.module('app', []);
+        app.controller('ctrl', function($scope, $http) {
+            $scope.query = "SELECT * FROM Kullanicilar";
+            $scope.tablelist = [{'name':'Yükleniyor'}];
+            $scope.tablename = 'Yükleniyor';
+            $scope.table = [];
+            $scope.cols = [];
+
+            $http({
+                method : "GET",
+                url : "/tablelist",
+                headers: {
+                    "Content-Type":"application/json",
+                }
+             }).then(function mySuccess(response) {
+                $scope.tablelist = response.data;
+             }, function myError(response) {
+                alert("HATA: Tablo listeleri getirilemedi.");
+             });
+
+            $scope.submit = function(){
+                $http({
+                    method : "POST",
+                    url : "/query",
+                    data : {'query': $scope.query},
+                    headers: {
+                        "Content-Type":"application/json",
+                    }
+                 }).then(function mySuccess(response) {
+                    $scope.table = response.data;
+                 }, function myError(response) {
+                    alert("HATA: Sorguda bir hata oluştu.");
+                 });
+            }
+
+            $scope.colchange = function(){
+                $scope.cols = $scope.tablelist.filter(x=>x['name'] == $scope.tablename)[0].cols;
+            };
+
+            $scope.addCode = function(){
+                $scope.query = $scope.type;
+            };
+        });
+    </script>
+</head>
+<body ng-app="app" ng-controller="ctrl">
+    <p><textarea class="form-control" ng-model="query"></textarea></p>
+    <div class="input-group">
+        <select ng-model="tablename" ng-change="colchange()" class="form-control" ng-placeholder="Tablo Adı">
+            <option ng-repeat="t in tablelist">{{t.name}}</option>
+        </select>
+        <select ng-model="colname" class="form-control">
+            <option selected>*</option>
+            <option ng-repeat="col in cols">{{col}}</option>
+        </select>
+        <select ng-model="type" ng-change="addCode()" class="form-control">
+             <option value="SELECT {{colname}} FROM {{tablename}} WHERE 1=1; ">SELECT</option>
+             <option value="INSERT INTO {{tablename}} VALUES ('', ); ">INSERT</option>
+             <option value="UPDATE {{tablename}} SET {{colname}}='' WHERE 1=0; ">UPDATE</option>
+             <option value="DELETE FROM {{tablename}} WHERE 1=0; ">DELETE</option>
+        </select>
+    </div>
+    <button class="btn btn-primary" type="submit" ng-click="submit()">Sorgula</button>
+    <div class="w-100 text-center">
+        <h3>Sonuçlar</h3><hr class="w-50">
+    </div>
+    <table class="table">
+        <tbody>
+            <tr ng-repeat="row in table">
+                <td ng-repeat="col in row">{{col}}</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
