@@ -1,11 +1,14 @@
 from Network.bottle import route,get,request,response
 from Business import GrupBusiness
 from Network.Security import *
+from Test import TEST
+
+TEST("GrupStratejiController")
 
 @get('/strateji/gruplar/<ustGrupid>')
 def Gruplar(ustGrupid):
     if IsAllow(request, Roller.TumHesaplar):
-        print("MalzemeGrupları gruplar:", ustGrupid)
+        TEST("MalzemeGrupları gruplar:", ustGrupid)
         return json_dumps(GrupBusiness.getGruplar(ustGrupid))
     else:
         UnauthorizedError()

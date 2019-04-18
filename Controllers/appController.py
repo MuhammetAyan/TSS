@@ -1,9 +1,10 @@
 from Network.bottle import request, json_dumps, route, abort
 from Network.Security import *
 from Business import AppBusiness
+from Test import TEST
 import time
 
-print("appController")
+TEST("appController")
 
 
 @route('/app/optimizasyon')
@@ -12,7 +13,7 @@ def hesapla():
         # Test amaçlı 5 sn gecikme sağlanmıştır.
         import time
         time.sleep(5)
-        print("hesapla başarılı erişim")
+        TEST("hesapla başarılı erişim")
         return ""
     else:
         UnauthorizedError()

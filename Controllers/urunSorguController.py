@@ -1,8 +1,9 @@
 from Network.bottle import route,get,request,response
 from Business import UrunBusiness
 from Network.Security import *
+from Test import TEST
 
-print("urunSorguController")
+TEST("urunSorguController")
 
 
 @route('/urunlerisorgula/adresigetir/<stokkodu>')
