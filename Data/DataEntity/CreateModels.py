@@ -11,7 +11,7 @@ def CreateModels():
     def WriteClass(name: str):
         global temp
         print("\n{}:\t".format(name), end="")
-        temp += "\n\nclass db{}Model(object):\n".format(name)
+        temp += "\n\nclass db{}Model:\n".format(name)
         temp += "\tdef __init__(self, data: tuple):\n"
 
     def WriteAtt(attribute: str, i: int):
@@ -76,6 +76,14 @@ def CreateModels():
         temp += "\n\tdef delete(self):\n"
         temp += """\t\tDB.query(\"\"\"DELETE FROM """ + str(table[0]) + """ WHERE id = {}\"\"\".format(self.id))\n\n"""
 
+    def addSelect(table:str):
+        global temp
+        temp += "\n\t@staticmethod\n\tdef select(id):\n"
+        temp += """\t\tresult = DB.select(\"\"\"SELECT * FROM """ + str(table[0]) + """ WHERE id = {}\"\"\".format(id))\n"""
+        temp += "\t\tif len(result) > 0:\n"
+        temp += "\t\t\treturn result[0]\n"
+        temp += "\t\treturn None\n\n"
+
     def exportModels(tables):
         global temp
         temp += "\n"
@@ -97,6 +105,7 @@ def CreateModels():
         addInsert(columns, table)
         addUpdate(columns, table)
         addDelete(table)
+        addSelect(table)
 
     exportModels(tables)
 

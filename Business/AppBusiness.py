@@ -1,4 +1,4 @@
-from Data.DBModels import DB
+from Data.DBModels import DB, dbTedarikciModel, dbUrunTedarikciModel
 import Models.AppModel as apm
 
 
@@ -13,3 +13,7 @@ def OranGrafigi():
     x = apm.AppModel(Oran)
 
     return Oran[0][0]
+
+
+def Optimizasyon():
+    pass

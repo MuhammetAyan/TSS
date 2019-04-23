@@ -2,7 +2,7 @@ import datetime
 from .DBConnect import DB
 
 
-class dbGrupStratejilerModel(object):
+class dbGrupStratejilerModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.GrupId: int = data[1]
@@ -22,8 +22,16 @@ class dbGrupStratejilerModel(object):
 		DB.query("""DELETE FROM GrupStratejiler WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM GrupStratejiler WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbKullanicilarModel(object):
+
+
+class dbKullanicilarModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.KullaniciAdi: str = data[1]
@@ -41,8 +49,16 @@ class dbKullanicilarModel(object):
 		DB.query("""DELETE FROM Kullanicilar WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM Kullanicilar WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbMalKabulModel(object):
+
+
+class dbMalKabulModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
@@ -65,8 +81,16 @@ class dbMalKabulModel(object):
 		DB.query("""DELETE FROM MalKabul WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM MalKabul WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbMalzemeGruplariModel(object):
+
+
+class dbMalzemeGruplariModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.GrupAdi: str = data[1]
@@ -83,8 +107,16 @@ class dbMalzemeGruplariModel(object):
 		DB.query("""DELETE FROM MalzemeGruplari WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM MalzemeGruplari WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbSonuclarModel(object):
+
+
+class dbSonuclarModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
@@ -103,8 +135,16 @@ class dbSonuclarModel(object):
 		DB.query("""DELETE FROM Sonuclar WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM Sonuclar WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbTedarikciModel(object):
+
+
+class dbTedarikciModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.TedarikciAdi: str = data[1]
@@ -122,8 +162,16 @@ class dbTedarikciModel(object):
 		DB.query("""DELETE FROM Tedarikci WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM Tedarikci WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbTedarikUrunleriModel(object):
+
+
+class dbTedarikUrunleriModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
@@ -141,8 +189,16 @@ class dbTedarikUrunleriModel(object):
 		DB.query("""DELETE FROM TedarikUrunleri WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM TedarikUrunleri WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbUrunlerModel(object):
+
+
+class dbUrunlerModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
@@ -161,8 +217,16 @@ class dbUrunlerModel(object):
 		DB.query("""DELETE FROM Urunler WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM Urunler WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbUrunStratejilerModel(object):
+
+
+class dbUrunStratejilerModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
@@ -182,8 +246,16 @@ class dbUrunStratejilerModel(object):
 		DB.query("""DELETE FROM UrunStratejiler WHERE id = {}""".format(self.id))
 
 
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM UrunStratejiler WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
-class dbUrunTedarikciModel(object):
+
+
+class dbUrunTedarikciModel:
 	def __init__(self, data: tuple):
 		self.id: int = data[0]
 		self.StokKodu: str = data[1]
@@ -204,6 +276,14 @@ class dbUrunTedarikciModel(object):
 
 	def delete(self):
 		DB.query("""DELETE FROM UrunTedarikci WHERE id = {}""".format(self.id))
+
+
+	@staticmethod
+	def select(id):
+		result = DB.select("""SELECT * FROM UrunTedarikci WHERE id = {}""".format(id))
+		if len(result) > 0:
+			return result[0]
+		return None
 
 
 DB.Models.update({'dbGrupStratejilerModel': dbGrupStratejilerModel})

@@ -55,3 +55,26 @@ class DB:
                 result.append(FindModel(sql)(row))
             cursor.close()
             return result
+
+    class Cursor:
+        def __init__(self):
+            self.cursor = None
+
+        def start(self, sql: str):
+            DB()
+            self.cursor = DB.cnxn.cursor()
+            self.cursor.execute(sql)
+            self.data = []
+
+        def select(self):
+            if self.data.__len__() == 0:
+                self.data = self.cursor.fetchmany(10)
+            if self.data.__len__() > 0:
+                result = self.data[0]
+                return self.data.pop(0)
+            else:
+                self.cursor.close()
+                return None
+
+        def close(self):
+            self.cursor.close()
