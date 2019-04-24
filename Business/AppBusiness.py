@@ -16,4 +16,14 @@ def OranGrafigi():
 
 
 def Optimizasyon():
-    pass
+    stkkoduCur = DB.Cursor()
+    stkkoduCur.start("select distinct stokkodu from UrunTedarikci")
+    while stkkoduCur.fetch():
+        StokKodu = stkkoduCur.val()[0]  # Bu stokkodu ile ilgili gruplama yapılacak.
+        # Aynı stokkoduna sahip çıkarımlar select ile getiriliyor.
+        UrunTedarkiciler: list[dbUrunTedarikciModel] = DB.select("select * from UrunTedarikci where stokkodu = '{}'".format(StokKodu))
+        for UT in UrunTedarkiciler:
+
+            # yaşlandırmalı algoritma uygulanacak
+            # fonksiyon yazılabilir
+            pass

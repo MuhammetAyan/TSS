@@ -1,4 +1,4 @@
-from Network.bottle import route,get,request,response
+from Network.bottle import route, get, post, request, response, json_dumps
 from Business import GrupBusiness
 from Network.Security import *
 from Test import TEST
@@ -6,7 +6,7 @@ from Test import TEST
 TEST("GrupStratejiController")
 
 
-@get('/strateji/gruplar/<ustGrupid>')
+@get('/strateji/gruplar/<ustGrupid:int>')
 def Gruplar(ustGrupid):
     if IsAllow(request, Roller.TumHesaplar):
         TEST("MalzemeGrupları gruplar:", ustGrupid)
@@ -15,7 +15,7 @@ def Gruplar(ustGrupid):
         UnauthorizedError()
 
 
-@route('/strateji/adres/<grupId>')
+@route('/strateji/adres/<grupId:int>')
 def UstGruplar(grupId):
     if IsAllow(request, Roller.TumHesaplar):
         return json_dumps(GrupBusiness.GetUstGruplar(grupId))
@@ -23,7 +23,7 @@ def UstGruplar(grupId):
         UnauthorizedError()
 
 
-@route('/strateji/stratejigetir/<grupId>')
+@route('/strateji/stratejigetir/<grupId:int>')
 def GrupStratejiOran(grupId):
     if IsAllow(request, Roller.TumHesaplar):
         return json_dumps(GrupBusiness.GetGrupStratejiOran(grupId))
@@ -31,7 +31,7 @@ def GrupStratejiOran(grupId):
         UnauthorizedError()
 
 
-@route('/strateji/grafik/<grupId>')
+@route('/strateji/grafik/<grupId:int>')
 def GrupStrateji(grupId):
     if IsAllow(request, Roller.TumHesaplar):
         return json_dumps(GrupBusiness.GetGrupStratejileri(grupId))
@@ -42,13 +42,16 @@ def GrupStrateji(grupId):
 @post('/strateji/belirle')
 def StratejiBelirle():
     if IsAllow(request, Roller.TumHesaplar):
-        id = request.json.get('id')
-        tip = request.json.get('tip')
-        maliyet = request.json.get('maliyet')
-        kalite = request.json.get('kalite')
-        teslimat = request.json.get('teslimat')
-        memnuniyet = request.json.get('memnuniyet')
-
-        GrupBusiness.PostStratejiBelirle(id, tip, maliyet, kalite, teslimat, memnuniyet)
+        try:
+            id = request.json.get("id")
+            assert id is not None, "id bilgisi girilmemiş"
+            tip = request.json.get("tip")
+            assert tip in ["grup", "ürün"], "Geçersiz tip"
+            data = request.json.get("data")
+            assert type(data) is list, "data verisi yanlış girilmiş"
+            GrupBusiness.PostStratejiBelirle(id, tip, data)
+        except AssertionError as hata:
+            abort(400, hata)
     else:
         UnauthorizedError()
+

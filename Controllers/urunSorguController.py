@@ -1,4 +1,4 @@
-from Network.bottle import route,get,request,response
+from Network.bottle import route, get, request, response, json_dumps
 from Business import UrunBusiness
 from Network.Security import *
 from Test import TEST
@@ -33,7 +33,7 @@ def TedarikciBilgileriGetir(stokkodu):
 /urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId> 
 Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verilen tedarikçi yapılacak.
 """
-@route('/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId>')
+@route('/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId:int>')
 def UrunTedarikciDefaultYap(stokkodu,tedarikciId):
     if IsAllow(request, Roller.TumHesaplar):
         UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId)

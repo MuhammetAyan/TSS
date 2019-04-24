@@ -1,4 +1,4 @@
-from Network.bottle import *
+from Network.bottle import abort, request
 import secrets
 from threading import Thread, Event
 from Test import TEST

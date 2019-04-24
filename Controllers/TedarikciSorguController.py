@@ -1,4 +1,4 @@
-from Network.bottle import route,get,request,response
+from Network.bottle import route, get, request, response, json_dumps
 from Business import TedarikciBusiness
 from Network.Security import *
 from Test import TEST
@@ -22,7 +22,7 @@ def TedarikciSorgula(arama):
 
 
 
-@route('/tedarikcisorgula/tedarikci/<tedarikciId>')
+@route('/tedarikcisorgula/tedarikci/<tedarikciId:int>')
 def TedarikciSorgula(tedarikciId):
     """
     Tedarikçi sorgulamada bir tedarikçinin bilgileri gösterilirken tedarikçinin sattığı ürünler ve

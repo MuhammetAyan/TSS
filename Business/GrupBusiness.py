@@ -3,6 +3,7 @@ from Models.GrupModel import *
 from Models.GrupStratejilerModel import *
 from Models.UstGrupModel import *
 from Models.GrupStratejiOranlariModel import *
+import Business.AHPBusiness as Ahp
 from Test import TEST
 
 def getGruplar(ustGrupid):
@@ -95,12 +96,41 @@ def GetGrupStratejileri(Grupid):
 
     return temp
 
-def PostStratejiBelirle(id,tip,maliyet,kalite,teslimat,memnuniyet):
+def PostStratejiBelirle(id, tip, data):
     """
-    Gelen veriler mobil uygulamadan kıyas bilgilerinin AHP matris satır ortalamasından geçmiş halidir. Bu veriler "Stratejiler" tablosuna eklenecek.
+    Gelen veriler mobil uygulamadan kıyas bilgilerinin AHP matris satır ortalamasından geçmemiş halidir. Bu veriler AHP matris satır ortalamasından geçip "Stratejiler" tablosuna eklenecek.
     :return:
     """
-
     if tip == 'grup':
         DB.query("delete GrupStratejiler WHERE GrupId={}".format(id))
-        DB.query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(id,maliyet,kalite,teslimat,memnuniyet))
+
+        def getData(k1: str, k2: str):
+            """
+            Matrise yerleştirilecek değerleri hesaplar.
+            :param k1: Kriter1 adı
+            :param k2: Kriter2 adı
+            :return:
+            """
+            if k1 == k2:
+                return 1
+            for row in data:
+                if row['Kriter1'] == k1 and row['Kriter2'] == k2:
+                    return int(row['Oran'])
+                elif row['Kriter1'] == k2 and row['Kriter2'] == k1:
+                    return 1 / int(row['Oran'])
+            raise ValueError('"{}" ve "{}" ikilisi için değer bulunamadı.'.format(k1, k2))
+
+        kriterler = ["Maliyet", "Kalite", "Teslimat", "Memnuniyet"]  # Kriter isimleri aşağıdaki sql sorgusu ile aynı sırada olmalı
+
+        def matrisOlustur() -> list:
+            matris = []
+            for k1 in kriterler:
+                row = []
+                for k2 in kriterler:
+                    row.append(getData(k1, k2))
+                matris.append(row)
+            return matris
+
+        sonuc = Ahp.matrisSatirOrtalamasi(matrisOlustur())
+
+        DB.query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(id, sonuc[0], sonuc[1], sonuc[2], sonuc[3]))

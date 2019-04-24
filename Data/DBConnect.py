@@ -65,16 +65,22 @@ class DB:
             self.cursor = DB.cnxn.cursor()
             self.cursor.execute(sql)
             self.data = []
+            self._val = None
 
-        def select(self):
+        def fetch(self):
             if self.data.__len__() == 0:
                 self.data = self.cursor.fetchmany(10)
             if self.data.__len__() > 0:
-                result = self.data[0]
-                return self.data.pop(0)
+                self._val = self.data.pop(0)
+                return self._val
             else:
+                self._val = None
                 self.cursor.close()
                 return None
+
+        def val(self):
+            """fetch ile okunan son değeri döndürür."""
+            return self._val
 
         def close(self):
             self.cursor.close()
