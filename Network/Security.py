@@ -38,9 +38,12 @@ def IsAllow(req: request, role: Rol):
     """
     key = req.get_header("auth", "")
     TEST("gelen auth key: '{}'".format(key))
-    if role.roles.__contains__(Roller.Misafir.roles[0]) and key == "":
-        TEST("misafir yetkisi verildi")
-        return True
+    if key == "":
+        if role.roles.__contains__(Roller.Misafir.roles[0]):
+            TEST("misafir yetkisi verildi")
+            return True
+        UnauthorizedError()
+        return False
     for user in __UsersVaribles__:
         if user.key == key:
             user.refreshTime()  # User için süreyi uzat
@@ -50,7 +53,7 @@ def IsAllow(req: request, role: Rol):
                 return True
             else:
                 return False
-    abort(code=401, text="Bağlantınız zaman aşımına uğramış!")
+    abort(code=403, text="Bağlantınız zaman aşımına uğramış!")
     return False
 
 
@@ -60,7 +63,7 @@ def UnauthorizedError(message="Yetkisiz erişim!"):
     :param message: Hata mesajı default:"Yetkisiz erişim!"
     :return:
     """
-    return abort(403, text=message)
+    return abort(401, text=message)
 
 
 def KeyGenerator():
