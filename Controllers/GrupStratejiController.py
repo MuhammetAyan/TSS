@@ -44,14 +44,16 @@ def StratejiBelirle():
     if IsAllow(request, Roller.TumHesaplar):
         try:
             id = request.json.get("id")
-            assert id is not None, "id bilgisi girilmemiş"
+            assert id is not None, "id bilgisi girilmemiş."
             tip = request.json.get("tip")
             assert tip in ["grup", "ürün"], "Geçersiz tip"
             data = request.json.get("data")
-            assert type(data) is list, "data verisi yanlış girilmiş"
+            assert type(data) is list, "data verisi yanlış girilmiş."
             GrupBusiness.PostStratejiBelirle(id, tip, data)
         except AssertionError as hata:
-            abort(400, hata)
+            abort(400, hata.__str__())
+        except Exception as hata:
+            abort(500, hata.__str__())
     else:
         UnauthorizedError()
 

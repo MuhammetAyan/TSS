@@ -15,8 +15,6 @@
             $scope.type="POST";
             $scope.detail = "";
 
-            $scope.data ='{"username":"Muhammet", "password":"1234"}';
-
             $scope.urllist= [
             {'text': 'Login', 'url': '/account/login', 'metot': 'POST'},
             {'text': 'Logout', 'url': '/account/logout', 'metot': 'GET'},
@@ -36,24 +34,13 @@
                         if (reqStr == ""){
                             reqStr = "{}";
                         }
-                        console.log("regStr = " + reqStr);
-                        var request = JSON.parse(reqStr);
-                        //console.log(request);
-                        var req =[];
-                        console.log(services[i].url);
-                        for(var r in request){
-                            var key = r;
-                            var val = request[r];
-                            req.push({'key': r, 'value': val});
-                            console.log({'key': r, 'value': val});
-                        }
                         $scope.urllist.push(
                         {'text':    services[i].url,
                          'url':     services[i].url,
                          'metot':   services[i].metot,
                          'status':  services[i].status,
                          'detail':  services[i].detail,
-                         'request': req,
+                         'request': services[i].request,
                         });
                     }
                  }, function myError(response) {
@@ -65,14 +52,11 @@
                 {"key":"Content-Type", "value":"application/json"},
             ];
 
-            $scope.veriler = [
-                {"key":"username", "value":"Muhammet"},
-                {"key":"password", "value":"1234"}
-            ];
-
-            $scope.yeniveri = function(){
-                $scope.veriler.push({"key":"", "value":""});
-            };
+            $scope.veriler = '{"username":"Muhammet", "password":"1234"}';
+            $scope.getveri = function() {
+                if($scope.veriler == "") return "{}";
+                return JSON.parse($scope.veriler.split("'").join("\""));
+            }
 
             $scope.yenimeta = function(){
                 $scope.metadata.push({"key":"", "value":""});
@@ -88,20 +72,11 @@
                 head = head.slice(0, -1)
                 head += '}';
 
-                var data = '{ ';
-                for(var i=0; i<$scope.veriler.length;i++){
-                    var key =$scope.veriler[i]['key'];
-                    var val =$scope.veriler[i]['value'];
-                    data +='"' + key + '" : "' + val + '",';
-                }
-                data = data.slice(0, -1)
-                data += '}';
-
-                //var data = $scope.data;
+                var data = $scope.data;
                  $http({
                     method : $scope.type,
                     url : $scope.url,
-                    data: JSON.parse(data), //JSON.parse($scope.data.split("'").join("\"")),
+                    data: $scope.getveri(),
                     headers: JSON.parse(head),
                  }).then(function mySuccess(response) {
                     $scope.responses.unshift(response);
@@ -127,10 +102,7 @@
                 $scope.type = metod;
                 $scope.detail = url + ": " + detail;
                 if (request != undefined){
-                    $scope.veriler = [];
-                    for(var i=0; i<request.length ;i++){
-                        $scope.veriler.push({"key": request[i]["key"], "value": request[i]["value"]});
-                    }
+                    $scope.veriler = request;
                 }
             };
 
@@ -217,7 +189,7 @@
         <div class="row">
             <div class="col-12">
                 <h3>Veri Gir</h3>
-                <div class="list-group">
+                <!--div class="list-group">
                     <div class="list-group-item list-group-item-success" ng-repeat="veri in veriler">
                         <div class="input-group">
                             <input class="input-group-item form-control" type="text" ng-model="veri.key" placeholder="Key">
@@ -225,7 +197,8 @@
                             <div class="btn btn-dark input-group-item" ng-click="deleteData($index)">-</div>
                         </div>
                     </div>
-                </div>
+                </div-->
+                <textarea class="form-control" ng-model="veriler"></textarea>
                 <div class="btn-group">
                     <div class="btn btn-success" ng-click="yeniveri()">Yeni</div>
                     <div class="btn btn-warning" ng-click='veriler=[

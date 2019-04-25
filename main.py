@@ -4,6 +4,9 @@ from Controllers.urunSorguController import *
 from Controllers.testController import *
 from Controllers.GrupStratejiController import *
 from Controllers.TedarikciSorguController import *
+
+debug(False)
+
 from Network.runserver import runserver
 from socket import gethostbyname, gethostname
 

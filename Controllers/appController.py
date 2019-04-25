@@ -1,4 +1,4 @@
-from Network.bottle import request, json_dumps, route, abort
+from Network.bottle import request, json_dumps, route, abort, error
 from Network.Security import *
 from Business import AppBusiness
 from Test import TEST
@@ -26,3 +26,16 @@ def rate():
         return json_dumps({"oran": oran})
     else:
         UnauthorizedError()
+
+
+@error(400)
+@error(401)
+@error(403)
+@error(404)
+@error(405)
+@error(500)
+def error404(error):
+    if len(error.args) < 2:
+        return error.status
+    else:
+        return error.args[1]
