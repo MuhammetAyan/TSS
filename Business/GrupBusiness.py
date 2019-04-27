@@ -16,8 +16,9 @@ def getGruplar(ustGrupid):
     datalist: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where UstGrupId = {}".format(ustGrupid))
     temp: list[GrupModel] = []
     for data in datalist:
-        x = GrupModel(data.id, data.GrupAdi)
-        temp.append(x.__dict__)
+        if data.id != 0:
+            x = GrupModel(data.id, data.GrupAdi)
+            temp.append(x.__dict__)
     return temp
 
 
@@ -43,7 +44,7 @@ def GetGrupStratejiOran(Grupid):
     _grupId = Grupid
     datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))
     while _grupId != 0 and len(datalist) == 0:  # Grubun stratejisi olmadığı sürece
-        grup: list[dbMalzemeGruplariModel] = dbMalzemeGruplariModel.select(_grupId)  # grubu bul
+        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(_grupId)  # grubu bul
         _grupId = grup.UstGrupId  # Bir üst gruba çık
         datalist = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))  # tekrar sorgula
 
@@ -77,28 +78,29 @@ def GetGrupStratejiOran(Grupid):
 
     return temp
 
+
 def GetUstGruplar(Grupid):
     """
     Id'si verilen grubun hiyerarşik olarak üst gruplarını döndürür
     :param Grupid:
     :return:
     """
-    UstGruplar :list[UstGrupModel] = []
+    UstGruplar: list[UstGrupModel] = []
     GrupId = Grupid
-    TEST(type(GrupId))  # list indices must be integers or slices, not str hatası vriyorint yapıom tipini out of range veriyo aşşada forda Gruplar yazınca düzeldi biraz anladım ama tam anlamadım
+    if GrupId != 0:
+        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
+        model = UstGrupModel(grup.id, grup.GrupAdi)
+        UstGruplar.append(model.__dict__)
     while GrupId != 0:
-        gruplar: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
-        UstGrupId = gruplar[0].UstGrupId
-
-        grup = gruplar[0]
-        ustGrupAdi: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(UstGrupId))
-        x = UstGrupModel(grup.UstGrupId, ustGrupAdi[0].GrupAdi)
-        UstGruplar.append(x.__dict__)
-
-        GrupId = UstGrupId
+        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
+        ustGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(grup.UstGrupId)
+        model = UstGrupModel(ustGrup.id, ustGrup.GrupAdi)
+        UstGruplar.append(model.__dict__)
+        GrupId = ustGrup.id
 
     UstGruplar.reverse()
     return UstGruplar
+
 
 def GetGrupStratejileri(Grupid):
     datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
@@ -117,6 +119,7 @@ def GetGrupStratejileri(Grupid):
         temp.append(y.__dict__)
 
     return temp
+
 
 def PostStratejiBelirle(id, tip, data):
     """
