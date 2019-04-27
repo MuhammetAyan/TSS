@@ -36,7 +36,12 @@ Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verile
 @route('/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId:int>')
 def UrunTedarikciDefaultYap(stokkodu,tedarikciId):
     if IsAllow(request, Roller.TumHesaplar):
-        UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId)
+        try:
+            UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId)
+        except AssertionError as error:
+            abort(400, error.__str__())
+        except Exception as error:
+            abort(500, error.__str__())
     else:
         UnauthorizedError()
 
@@ -48,12 +53,4 @@ def UrunSorgula(arama):
         return json_dumps(UrunBusiness.UrunleriGetir(arama))
     else:
         UnauthorizedError()
-
-
-
-
-
-
-
-
 

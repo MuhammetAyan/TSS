@@ -6,6 +6,7 @@ from Models.GrupStratejiOranlariModel import *
 import Business.AHPBusiness as Ahp
 from Test import TEST
 
+
 def getGruplar(ustGrupid):
     """
     Üst grubun altındaki tüm grupları adları ve id'lerini getirir.
@@ -19,6 +20,7 @@ def getGruplar(ustGrupid):
         temp.append(x.__dict__)
     return temp
 
+
 def GetGrupStratejiOran(Grupid):
     """
     grup id'si girilen malzeme grubuna ait strateji verisi döndürülecek. yapılıyor
@@ -26,31 +28,51 @@ def GetGrupStratejiOran(Grupid):
     :param Grupid:
     :return:
     """
-    datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
+    def yakinsa(oran):
+        """oranın en yakın olduğu değeri döndürür."""
+        oranlar = ["1/9", "1/7", "1/5", "1/3", "1", "3", "5", "7", "9"]
+        fark = 100
+        deger = "1"
+        for o in oranlar:
+            yenifark = abs(oran - eval(o))
+            if yenifark < fark:
+                fark = yenifark
+                deger = o
+        return deger
+
+    _grupId = Grupid
+    datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))
+    while _grupId != 0 and len(datalist) == 0:  # Grubun stratejisi olmadığı sürece
+        grup: list[dbMalzemeGruplariModel] = dbMalzemeGruplariModel.select(_grupId)  # grubu bul
+        _grupId = grup.UstGrupId  # Bir üst gruba çık
+        datalist = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))  # tekrar sorgula
+
+    assert len(datalist) > 0, "Malzeme grubuna ait strateji verisi bulunamadı."
+
     temp: list[GrupStratejiOranlariModel] = []
-    for data in datalist:
+    for data in datalist:  # normalde datalist'te tek eleman var.
         oran = data.Maliyet/data.Kalite
-        y = GrupStratejiOranlariModel('Maliyet','Kalite',oran)
+        y = GrupStratejiOranlariModel('Maliyet', 'Kalite', yakinsa(oran))
         temp.append(y.__dict__)
 
         oran = data.Maliyet/data.Teslimat
-        y = GrupStratejiOranlariModel('Maliyet','Teslimat',oran)
+        y = GrupStratejiOranlariModel('Maliyet', 'Teslimat', yakinsa(oran))
         temp.append(y.__dict__)
 
         oran = data.Maliyet/data.Memnuniyet
-        y = GrupStratejiOranlariModel('Maliyet','Memnuniyet',oran)
+        y = GrupStratejiOranlariModel('Maliyet', 'Memnuniyet', yakinsa(oran))
         temp.append(y.__dict__)
 
         oran = data.Kalite/data.Teslimat
-        y = GrupStratejiOranlariModel('Kalite','Teslimat',oran)
+        y = GrupStratejiOranlariModel('Kalite', 'Teslimat', yakinsa(oran))
         temp.append(y.__dict__)
 
         oran = data.Kalite/data.Memnuniyet
-        y = GrupStratejiOranlariModel('Kalite','Memnuniyet',oran)
+        y = GrupStratejiOranlariModel('Kalite', 'Memnuniyet', yakinsa(oran))
         temp.append(y.__dict__)
 
         oran = data.Teslimat/data.Memnuniyet
-        y = GrupStratejiOranlariModel('Teslimat','Memnuniyet',oran)
+        y = GrupStratejiOranlariModel('Teslimat', 'Memnuniyet', yakinsa(oran))
         temp.append(y.__dict__)
 
     return temp

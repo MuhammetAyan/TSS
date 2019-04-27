@@ -46,7 +46,10 @@ def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
     :param TedarikciId:
     :return:
     """
-    DB.query("update Urunler set DefTedId = '{}' where StokKodu= '{}'".format(TedarikciId,StokKodu))
+    id = DB.select("select id from Urunler where StokKodu = '{}'".format(StokKodu))
+    assert len(id) == 1 and len(id[0]) == 1, "'{}' adlı stokkodu bulunamadı.".format(StokKodu)
+    DB.query("update Urunler set DefTedId = '{}' where StokKodu= '{}'".format(TedarikciId, StokKodu))
+
 
     #return 0  yapmaya gerek varmı bu halde çalışıyor ??????
 
