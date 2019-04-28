@@ -2,6 +2,7 @@ from Data.DBModels import *
 import Models.UrunBilgiModel as ubm
 import Models.UrunTedarikciBilgileriModel as tbm
 
+
 def UrunleriGetir(arama):
     """
     [{'stok': 'stok kodu', 'grup': 'grup adı'}]
@@ -46,7 +47,7 @@ def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
     :param TedarikciId:
     :return:
     """
-    id = DB.select("select id from Urunler where StokKodu = '{}'".format(StokKodu))
+    id = DB.select("select id from Urunler where StokKodu = '{}'".format(StokKodu), IsFree=True)
     assert len(id) == 1 and len(id[0]) == 1, "'{}' adlı stokkodu bulunamadı.".format(StokKodu)
     DB.query("update Urunler set DefTedId = '{}' where StokKodu= '{}'".format(TedarikciId, StokKodu))
 

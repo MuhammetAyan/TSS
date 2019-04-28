@@ -1,4 +1,4 @@
-from Network.bottle import abort, request
+from Network.bottle import abort, request, response
 import secrets
 from threading import Thread, Event
 from Test import TEST
@@ -53,8 +53,28 @@ def IsAllow(req: request, role: Rol):
                 return True
             else:
                 return False
-    abort(code=403, text="Bağlantınız zaman aşımına uğramış!")
+    abort(403, "Bağlantınız zaman aşımına uğramış!")
     return False
+
+
+def UserError(message=""):
+    """
+    Kullanıcıdan kaynaklanan ve assert komudu ile yakalanan hataların mesajını döndürür.
+    :param message: Hata mesajı
+    :return:
+    """
+    abort(400, message)
+    response.json({'message': message})
+
+
+def FailedError(message="İşlem gerçekleştirilemedi!"):
+    """
+    Exception hatalarında kullanıcıya 500 hata mesajı döndürür.
+    :param message: Hata mesajı. Varsayılan mesaj: "İşlem gerçekleştirilemedi!"
+    :return:
+    """
+    abort(500, message)
+    response.json({'message': message})
 
 
 def UnauthorizedError(message="Yetkisiz erişim!"):
@@ -63,7 +83,8 @@ def UnauthorizedError(message="Yetkisiz erişim!"):
     :param message: Hata mesajı default:"Yetkisiz erişim!"
     :return:
     """
-    return abort(401, text=message)
+    abort(401, message)
+    response.json({'message': message})
 
 
 def KeyGenerator():

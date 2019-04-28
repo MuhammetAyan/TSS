@@ -33,4 +33,4 @@ def TedarikciSorgula(tedarikciId):
     if IsAllow(request, Roller.TumHesaplar):
         return json_dumps(TedarikciBusiness.TedarikciUrunleri(tedarikciId))
     else:
-        UnauthorizedError()
+        return UnauthorizedError()

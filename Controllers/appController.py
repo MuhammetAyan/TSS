@@ -2,7 +2,6 @@ from Network.bottle import request, json_dumps, route, abort, error
 from Network.Security import *
 from Business import AppBusiness
 from Test import TEST
-import time
 
 TEST("appController")
 

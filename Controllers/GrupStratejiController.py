@@ -9,8 +9,13 @@ TEST("GrupStratejiController")
 @get('/strateji/gruplar/<ustGrupid:int>')
 def Gruplar(ustGrupid):
     if IsAllow(request, Roller.TumHesaplar):
-        TEST("MalzemeGrupları gruplar:", ustGrupid)
-        return json_dumps(GrupBusiness.getGruplar(ustGrupid))
+        try:
+            TEST("MalzemeGrupları gruplar:", ustGrupid)
+            return json_dumps(GrupBusiness.getGruplar(ustGrupid))
+        except AssertionError as error:
+            UserError(error.__str__())
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
@@ -18,7 +23,12 @@ def Gruplar(ustGrupid):
 @route('/strateji/adres/<grupId:int>')
 def UstGruplar(grupId):
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(GrupBusiness.GetUstGruplar(grupId))
+        try:
+            return json_dumps(GrupBusiness.GetUstGruplar(grupId))
+        except AssertionError as error:
+            UserError(error.__str__())
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
@@ -26,7 +36,12 @@ def UstGruplar(grupId):
 @route('/strateji/stratejigetir/<grupId:int>')
 def GrupStratejiOran(grupId):
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(GrupBusiness.GetGrupStratejiOran(grupId))
+        try:
+            return json_dumps(GrupBusiness.GetGrupStratejiOran(grupId))
+        except AssertionError as error:
+            UserError(error.__str__())
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
@@ -34,7 +49,10 @@ def GrupStratejiOran(grupId):
 @route('/strateji/grafik/<grupId:int>')
 def GrupStrateji(grupId):
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(GrupBusiness.GetGrupStratejileri(grupId))
+        try:
+            return json_dumps(GrupBusiness.GetGrupStratejileri(grupId))
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
@@ -51,9 +69,9 @@ def StratejiBelirle():
             assert type(data) is list, "data verisi yanlış girilmiş."
             GrupBusiness.PostStratejiBelirle(id, tip, data)
         except AssertionError as hata:
-            abort(400, hata.__str__())
+            UserError(hata.__str__())
         except Exception as hata:
-            abort(500, hata.__str__())
+            FailedError()
     else:
         UnauthorizedError()
 

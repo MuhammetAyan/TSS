@@ -14,7 +14,10 @@ def AdresiGetir(stokkodu):
     :return:
     """
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(UrunBusiness.UrunAdresi(stokkodu))
+        try:
+            return json_dumps(UrunBusiness.UrunAdresi(stokkodu))
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
@@ -22,26 +25,31 @@ def AdresiGetir(stokkodu):
 bilgilerle tedarikçinin id'si, adı, AHP puanı ve ürünün varsayılan tedarikçisi olup olmadığı bilgisini döndürecek.
 [{'id': 0, 'tedarikci': 'tedarikçi adı', 'ahp': 23, 'default': False}] """
 
+
 @route('/urunlerisorgula/tedarikciler/<stokkodu>')
 def TedarikciBilgileriGetir(stokkodu):
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(UrunBusiness.TedarikciBilgi(stokkodu))
+        try:
+            return json_dumps(UrunBusiness.TedarikciBilgi(stokkodu))
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
-"""
-/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId> 
-Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verilen tedarikçi yapılacak.
-"""
+
 @route('/urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId:int>')
 def UrunTedarikciDefaultYap(stokkodu,tedarikciId):
+    """
+    /urunlerisorgula/defaultyap/<stokkodu>/<tedarikciId>
+    Verilen stok koduna sahip ürünün varsayılan tedarikçisi olarak id'si verilen tedarikçi yapılacak.
+    """
     if IsAllow(request, Roller.TumHesaplar):
         try:
             UrunBusiness.UrunTedarikciDefaultYap(stokkodu,tedarikciId)
         except AssertionError as error:
-            abort(400, error.__str__())
-        except Exception as error:
-            abort(500, error.__str__())
+            UserError(error.__str__())
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 
@@ -50,7 +58,10 @@ arama metni ile başlayan stok koduna sahip ürünleri ve bağlı olduğu grubun
 @get('/urunlerisorgula/urunler/<arama>')
 def UrunSorgula(arama):
     if IsAllow(request, Roller.TumHesaplar):
-        return json_dumps(UrunBusiness.UrunleriGetir(arama))
+        try:
+            return json_dumps(UrunBusiness.UrunleriGetir(arama))
+        except Exception:
+            FailedError()
     else:
         UnauthorizedError()
 

@@ -24,7 +24,7 @@ def getGruplar(ustGrupid):
 
 def GetGrupStratejiOran(Grupid):
     """
-    grup id'si girilen malzeme grubuna ait strateji verisi döndürülecek. yapılıyor
+    grup id'si girilen malzeme grubuna ait strateji verisi döndürülecek.
     [{'Kriter1': 'Maliyet', 'Kriter2': 'Teslimat', 'Oran': 5}]
     :param Grupid:
     :return:
@@ -43,12 +43,13 @@ def GetGrupStratejiOran(Grupid):
 
     _grupId = Grupid
     datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))
+    assert len(datalist) == 1, "Böyle bir grup bulunamadı."
     while _grupId != 0 and len(datalist) == 0:  # Grubun stratejisi olmadığı sürece
         grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(_grupId)  # grubu bul
         _grupId = grup.UstGrupId  # Bir üst gruba çık
         datalist = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))  # tekrar sorgula
 
-    assert len(datalist) > 0, "Malzeme grubuna ait strateji verisi bulunamadı."
+    assert len(datalist) == 1, "Malzeme grubuna ait strateji verisi bulunamadı."
 
     temp: list[GrupStratejiOranlariModel] = []
     for data in datalist:  # normalde datalist'te tek eleman var.
@@ -89,6 +90,7 @@ def GetUstGruplar(Grupid):
     GrupId = Grupid
     if GrupId != 0:
         grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
+        assert grup is not None, "Böyle bir grup bulunamadı."
         model = UstGrupModel(grup.id, grup.GrupAdi)
         UstGruplar.append(model.__dict__)
     while GrupId != 0:
@@ -104,6 +106,7 @@ def GetUstGruplar(Grupid):
 
 def GetGrupStratejileri(Grupid):
     datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
+    assert len(datalist) == 1, "Böyle bir grup bulunamadı."
     temp: list[GrupStratejilerModel] = []
     for data in datalist:
         y = GrupStratejilerModel('Maliyet',data.Maliyet)
@@ -129,6 +132,14 @@ def PostStratejiBelirle(id, tip, data):
     if tip == 'grup':
         DB.query("delete GrupStratejiler WHERE GrupId={}".format(id))
 
+        def floatt(x: str)->float:
+            l = ["1/9", "1/7", "1/5", "1/3", "1", "3", "5", "7", "9"]
+            assert x in l, "Geçersiz değer!"
+            if x.__contains__("/"):
+                return float(x.split("/")[0]) / float(x.split("/")[1])
+            else:
+                return float(x)
+
         def getData(k1: str, k2: str):
             """
             Matrise yerleştirilecek değerleri hesaplar.
@@ -137,12 +148,12 @@ def PostStratejiBelirle(id, tip, data):
             :return:
             """
             if k1 == k2:
-                return 1
+                return 1.
             for row in data:
                 if row['Kriter1'] == k1 and row['Kriter2'] == k2:
-                    return int(row['Oran'])
+                    return floatt(row['Oran'])
                 elif row['Kriter1'] == k2 and row['Kriter2'] == k1:
-                    return 1 / int(row['Oran'])
+                    return 1 / floatt(row['Oran'])
             raise ValueError('"{}" ve "{}" ikilisi için değer bulunamadı.'.format(k1, k2))
 
         kriterler = ["Maliyet", "Kalite", "Teslimat", "Memnuniyet"]  # Kriter isimleri aşağıdaki sql sorgusu ile aynı sırada olmalı
@@ -159,3 +170,6 @@ def PostStratejiBelirle(id, tip, data):
         sonuc = Ahp.matrisSatirOrtalamasi(matrisOlustur())
 
         DB.query("insert into GrupStratejiler (GrupId,Maliyet,Kalite,Teslimat, Memnuniyet) values('{}','{}','{}','{}','{}') ".format(id, sonuc[0], sonuc[1], sonuc[2], sonuc[3]))
+    elif tip == 'ürün':
+        # Burası sonradan eklenecek. Şu anlık hata vermeye ayarlandı.
+        raise ValueError()
