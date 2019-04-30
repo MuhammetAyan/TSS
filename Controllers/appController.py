@@ -9,11 +9,8 @@ TEST("appController")
 @route('/app/optimizasyon')
 def hesapla():
     if IsAllow(request, Roller.Admin):
-        # Test amaçlı 5 sn gecikme sağlanmıştır.
-        import time
-        time.sleep(5)
-        TEST("hesapla başarılı erişim")
-        return ""
+        AppBusiness.Optimizasyon()
+        return
     else:
         UnauthorizedError()
 

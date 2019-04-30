@@ -26,17 +26,17 @@ def UrunleriGetir(arama):
 def UrunAdresi(stokkodu):
     Urun: list[dbUrunlerModel] = DB.select("select top 1 * from Urunler where StokKodu = '{}'".format(stokkodu))
     GrupId = Urun[0].GrupId
-    Gruplar = []
+    Gruplar = [Urun[0].StokKodu]
     while GrupId != 0:
         Grup: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(GrupId))
         UstGrupId =Grup[0].UstGrupId
         Gruplar.append(Grup[0].GrupAdi)
         GrupId = UstGrupId
-
-    Gruplar.append(".")
+    if GrupId == 0:
+        AnaGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(0)
+        Gruplar.append(AnaGrup.GrupAdi)
     Gruplar.reverse()
     return Gruplar
-
 
 
 def UrunTedarikciDefaultYap(StokKodu,TedarikciId):
@@ -79,7 +79,11 @@ def TedarikciBilgi(stokkodu):
     return TedarikciBilgi
 
 
-
-
-
+def GetUrunStratejisi(stokkodu):
+    DB()
+    _urun: list[dbUrunlerModel] = DB.select("select * from  where stokkodu = '{}'".format(stokkodu))
+    assert len(_urun) == 1, "Aranılan stokkodu bulunamadı."
+    grupId = _urun[0].GrupId
+    import Business.GrupBusiness as GrupBus
+    return GrupBus.GetGrupStratejileri(grupId)
 

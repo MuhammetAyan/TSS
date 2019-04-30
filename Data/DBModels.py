@@ -3,13 +3,13 @@ from .DBConnect import DB
 
 
 class dbGrupStratejilerModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.GrupId: int = data[1]
-		self.Maliyet: float = data[2]
-		self.Kalite: float = data[3]
-		self.Teslimat: float = data[4]
-		self.Memnuniyet: float = data[5]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.GrupId: int = data[1] if data is not None else None
+		self.Maliyet: float = data[2] if data is not None else None
+		self.Kalite: float = data[3] if data is not None else None
+		self.Teslimat: float = data[4] if data is not None else None
+		self.Memnuniyet: float = data[5] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (GrupId, Maliyet, Kalite, Teslimat, Memnuniyet) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("GrupStratejiler", self.GrupId, self.Maliyet, self.Kalite, self.Teslimat, self.Memnuniyet))
@@ -32,11 +32,11 @@ class dbGrupStratejilerModel:
 
 
 class dbKullanicilarModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.KullaniciAdi: str = data[1]
-		self.Sifre: str = data[2]
-		self.Rol: str = data[3]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.KullaniciAdi: str = data[1] if data is not None else None
+		self.Sifre: str = data[2] if data is not None else None
+		self.Rol: str = data[3] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (KullaniciAdi, Sifre, Rol) VALUES ('{}', '{}', '{}')""".format("Kullanicilar", self.KullaniciAdi, self.Sifre, self.Rol))
@@ -59,16 +59,16 @@ class dbKullanicilarModel:
 
 
 class dbMalKabulModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.MaliyetPuan: int = data[3]
-		self.KalitePuan: int = data[4]
-		self.TeslimatPuan: int = data[5]
-		self.MemnuniyetPuan: int = data[6]
-		self.Tarih: datetime.datetime = data[7]
-		self.Adet: int = data[8]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.StokKodu: str = data[1] if data is not None else None
+		self.TedarikciId: int = data[2] if data is not None else None
+		self.MaliyetPuan: int = data[3] if data is not None else None
+		self.KalitePuan: int = data[4] if data is not None else None
+		self.TeslimatPuan: int = data[5] if data is not None else None
+		self.MemnuniyetPuan: int = data[6] if data is not None else None
+		self.Tarih: datetime.datetime = data[7] if data is not None else None
+		self.Adet: int = data[8] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan, Tarih, Adet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("MalKabul", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan, self.Tarih, self.Adet))
@@ -91,10 +91,10 @@ class dbMalKabulModel:
 
 
 class dbMalzemeGruplariModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.GrupAdi: str = data[1]
-		self.UstGrupId: int = data[2]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.GrupAdi: str = data[1] if data is not None else None
+		self.UstGrupId: int = data[2] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (GrupAdi, UstGrupId) VALUES ('{}', '{}')""".format("MalzemeGruplari", self.GrupAdi, self.UstGrupId))
@@ -117,12 +117,12 @@ class dbMalzemeGruplariModel:
 
 
 class dbSonuclarModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.AHPPuan: float = data[3]
-		self.AHPUyumSirasi: int = data[4]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.StokKodu: str = data[1] if data is not None else None
+		self.TedarikciId: int = data[2] if data is not None else None
+		self.AHPPuan: float = data[3] if data is not None else None
+		self.AHPUyumSirasi: int = data[4] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, AHPPuan, AHPUyumSirasi) VALUES ('{}', '{}', '{}', '{}')""".format("Sonuclar", self.StokKodu, self.TedarikciId, self.AHPPuan, self.AHPUyumSirasi))
@@ -145,11 +145,11 @@ class dbSonuclarModel:
 
 
 class dbTedarikciModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.TedarikciAdi: str = data[1]
-		self.Memnuniyet: float = data[2]
-		self.MemnuniyetAdedi: float = data[3]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.TedarikciAdi: str = data[1] if data is not None else None
+		self.Memnuniyet: float = data[2] if data is not None else None
+		self.MemnuniyetAdedi: float = data[3] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (TedarikciAdi, Memnuniyet, MemnuniyetAdedi) VALUES ('{}', '{}', '{}')""".format("Tedarikci", self.TedarikciAdi, self.Memnuniyet, self.MemnuniyetAdedi))
@@ -172,11 +172,11 @@ class dbTedarikciModel:
 
 
 class dbTedarikUrunleriModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.BirimFiyat: float = data[3]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.StokKodu: str = data[1] if data is not None else None
+		self.TedarikciId: int = data[2] if data is not None else None
+		self.BirimFiyat: float = data[3] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, BirimFiyat) VALUES ('{}', '{}', '{}')""".format("TedarikUrunleri", self.StokKodu, self.TedarikciId, self.BirimFiyat))
@@ -199,12 +199,12 @@ class dbTedarikUrunleriModel:
 
 
 class dbUrunlerModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.StokAdi: str = data[2]
-		self.GrupId: int = data[3]
-		self.DefTedId: int = data[4]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.StokKodu: str = data[1] if data is not None else None
+		self.StokAdi: str = data[2] if data is not None else None
+		self.GrupId: int = data[3] if data is not None else None
+		self.DefTedId: int = data[4] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (StokKodu, StokAdi, GrupId, DefTedId) VALUES ('{}', '{}', '{}', '{}')""".format("Urunler", self.StokKodu, self.StokAdi, self.GrupId, self.DefTedId))
@@ -227,13 +227,13 @@ class dbUrunlerModel:
 
 
 class dbUrunStratejilerModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.MaliyetPuan: float = data[2]
-		self.KalitePuan: float = data[3]
-		self.TeslimatPuan: float = data[4]
-		self.MemnuniyetPuan: float = data[5]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.StokKodu: str = data[1] if data is not None else None
+		self.MaliyetPuan: float = data[2] if data is not None else None
+		self.KalitePuan: float = data[3] if data is not None else None
+		self.TeslimatPuan: float = data[4] if data is not None else None
+		self.MemnuniyetPuan: float = data[5] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (StokKodu, MaliyetPuan, KalitePuan, TeslimatPuan, MemnuniyetPuan) VALUES ('{}', '{}', '{}', '{}', '{}')""".format("UrunStratejiler", self.StokKodu, self.MaliyetPuan, self.KalitePuan, self.TeslimatPuan, self.MemnuniyetPuan))
@@ -256,16 +256,16 @@ class dbUrunStratejilerModel:
 
 
 class dbUrunTedarikciModel:
-	def __init__(self, data: tuple):
-		self.id: int = data[0]
-		self.StokKodu: str = data[1]
-		self.TedarikciId: int = data[2]
-		self.MaliyetPuan: float = data[3]
-		self.MaliyetAdet: float = data[4]
-		self.KalitePuan: float = data[5]
-		self.KaliteAdet: float = data[6]
-		self.TeslimatPuan: float = data[7]
-		self.TeslimatAdet: float = data[8]
+	def __init__(self, data: tuple = None):
+		self.id: int = data[0] if data is not None else None
+		self.StokKodu: str = data[1] if data is not None else None
+		self.TedarikciId: int = data[2] if data is not None else None
+		self.MaliyetPuan: float = data[3] if data is not None else None
+		self.MaliyetAdet: float = data[4] if data is not None else None
+		self.KalitePuan: float = data[5] if data is not None else None
+		self.KaliteAdet: float = data[6] if data is not None else None
+		self.TeslimatPuan: float = data[7] if data is not None else None
+		self.TeslimatAdet: float = data[8] if data is not None else None
 
 	def insert(self):
 		DB.query("""INSERT INTO {} (StokKodu, TedarikciId, MaliyetPuan, MaliyetAdet, KalitePuan, KaliteAdet, TeslimatPuan, TeslimatAdet) VALUES ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}')""".format("UrunTedarikci", self.StokKodu, self.TedarikciId, self.MaliyetPuan, self.MaliyetAdet, self.KalitePuan, self.KaliteAdet, self.TeslimatPuan, self.TeslimatAdet))

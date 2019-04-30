@@ -99,7 +99,10 @@ def GetUstGruplar(Grupid):
         model = UstGrupModel(ustGrup.id, ustGrup.GrupAdi)
         UstGruplar.append(model.__dict__)
         GrupId = ustGrup.id
-
+    if GrupId == 0:
+        AnaGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
+        model = UstGrupModel(0, AnaGrup.GrupAdi)
+        UstGruplar.append(model.__dict__)
     UstGruplar.reverse()
     return UstGruplar
 

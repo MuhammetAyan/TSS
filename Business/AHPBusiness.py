@@ -36,6 +36,10 @@
 #     return result
 
 
+def matrisSatirOrtYakinsa(tedarikciPuani: float, tedarikciPuanlari: list)-> float:
+    return tedarikciPuani / sum(tedarikciPuanlari)
+
+
 def matrisSatirOrtalamasi(matris: list) -> list:
     LEN = len(matris) # matris kare matris kabul edilir.
     # Sütun toplama
@@ -57,3 +61,20 @@ def matrisSatirOrtalamasi(matris: list) -> list:
             toplam += x
         ortalamalar.append(toplam / len(satir) * 100)
     return ortalamalar
+
+
+def SonCarpim(stratejiler, tedarikciler):
+    """
+    İlgili stok koduna ait strateji ve tedarikcilerin kriter değerlerini matris çarpımı yaparak her tedarikcinin
+    AHP puanını belirler. (Strateji ve Tedarikciler'de kriterlerin aynı sıralanmasına dikkat ediniz.)
+    :param stratejiler: kalite, maliyet, teslimat ve memnuniyet puanları
+    :param tedarikciler: Her tedarikcinin id'si ve ilgili stok koduna ait kriter puanlarını içeren matris
+    :return: tedarikciId ile indexlenmiş AHP puanı içeren sözlük
+    """
+    result = {}
+    for tedarikci in tedarikciler:
+        toplam = 0.
+        for i in range(0, len(stratejiler)):
+            toplam += stratejiler[i] * tedarikci[i + 1]  # TedarikciId den dolayı 1 kaydırdık.
+        result.update({tedarikci[0]: toplam})  # {'tedarikciId': /*AHP puani*/}
+    return result
