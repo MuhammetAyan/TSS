@@ -40,42 +40,36 @@ def GetGrupStratejiOran(Grupid):
                 fark = yenifark
                 deger = o
         return deger
-
-    _grupId = Grupid
-    datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))
-    assert len(datalist) == 1, "Böyle bir grup bulunamadı."
-    while _grupId != 0 and len(datalist) == 0:  # Grubun stratejisi olmadığı sürece
-        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(_grupId)  # grubu bul
-        _grupId = grup.UstGrupId  # Bir üst gruba çık
-        datalist = DB.select("select * from GrupStratejiler where GrupId = {}".format(_grupId))  # tekrar sorgula
-
-    assert len(datalist) == 1, "Malzeme grubuna ait strateji verisi bulunamadı."
-
+    strateji: list[GrupStratejilerModel] = GetGrupStratejileri(Grupid)
     temp: list[GrupStratejiOranlariModel] = []
-    for data in datalist:  # normalde datalist'te tek eleman var.
-        oran = data.Maliyet/data.Kalite
-        y = GrupStratejiOranlariModel('Maliyet', 'Kalite', yakinsa(oran))
-        temp.append(y.__dict__)
+    kriterler = {}
+    for kriter in strateji:  # normalde datalist'te tek eleman var.
+        kriterler.update({kriter["kriter"]: kriter["val"]})
+    del strateji
+    
+    oran = kriterler["Maliyet"]/kriterler["Kalite"]
+    y = GrupStratejiOranlariModel('Maliyet', 'Kalite', yakinsa(oran))
+    temp.append(y.__dict__)
 
-        oran = data.Maliyet/data.Teslimat
-        y = GrupStratejiOranlariModel('Maliyet', 'Teslimat', yakinsa(oran))
-        temp.append(y.__dict__)
+    oran = kriterler["Maliyet"]/kriterler["Teslimat"]
+    y = GrupStratejiOranlariModel('Maliyet', 'Teslimat', yakinsa(oran))
+    temp.append(y.__dict__)
 
-        oran = data.Maliyet/data.Memnuniyet
-        y = GrupStratejiOranlariModel('Maliyet', 'Memnuniyet', yakinsa(oran))
-        temp.append(y.__dict__)
+    oran = kriterler["Maliyet"]/kriterler["Memnuniyet"]
+    y = GrupStratejiOranlariModel('Maliyet', 'Memnuniyet', yakinsa(oran))
+    temp.append(y.__dict__)
 
-        oran = data.Kalite/data.Teslimat
-        y = GrupStratejiOranlariModel('Kalite', 'Teslimat', yakinsa(oran))
-        temp.append(y.__dict__)
+    oran = kriterler["Kalite"]/kriterler["Teslimat"]
+    y = GrupStratejiOranlariModel('Kalite', 'Teslimat', yakinsa(oran))
+    temp.append(y.__dict__)
 
-        oran = data.Kalite/data.Memnuniyet
-        y = GrupStratejiOranlariModel('Kalite', 'Memnuniyet', yakinsa(oran))
-        temp.append(y.__dict__)
+    oran = kriterler["Kalite"]/kriterler["Memnuniyet"]
+    y = GrupStratejiOranlariModel('Kalite', 'Memnuniyet', yakinsa(oran))
+    temp.append(y.__dict__)
 
-        oran = data.Teslimat/data.Memnuniyet
-        y = GrupStratejiOranlariModel('Teslimat', 'Memnuniyet', yakinsa(oran))
-        temp.append(y.__dict__)
+    oran = kriterler["Teslimat"]/kriterler["Memnuniyet"]
+    y = GrupStratejiOranlariModel('Teslimat', 'Memnuniyet', yakinsa(oran))
+    temp.append(y.__dict__)
 
     return temp
 
@@ -88,43 +82,52 @@ def GetUstGruplar(Grupid):
     """
     UstGruplar: list[UstGrupModel] = []
     GrupId = Grupid
-    if GrupId != 0:
-        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
-        assert grup is not None, "Böyle bir grup bulunamadı."
-        model = UstGrupModel(grup.id, grup.GrupAdi)
-        UstGruplar.append(model.__dict__)
-    while GrupId != 0:
-        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
-        ustGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(grup.UstGrupId)
-        model = UstGrupModel(ustGrup.id, ustGrup.GrupAdi)
-        UstGruplar.append(model.__dict__)
-        GrupId = ustGrup.id
     if GrupId == 0:
         AnaGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
         model = UstGrupModel(0, AnaGrup.GrupAdi)
         UstGruplar.append(model.__dict__)
+    else:
+        grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
+        assert grup is not None, "Böyle bir grup bulunamadı."
+        model = UstGrupModel(grup.id, grup.GrupAdi)
+        UstGruplar.append(model.__dict__)
+        while GrupId != 0:
+            grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
+            ustGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(grup.UstGrupId)
+            model = UstGrupModel(ustGrup.id, ustGrup.GrupAdi)
+            UstGruplar.append(model.__dict__)
+            GrupId = ustGrup.id
     UstGruplar.reverse()
     return UstGruplar
 
 
 def GetGrupStratejileri(Grupid):
-    datalist: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = {}".format(Grupid))
-    assert len(datalist) == 1, "Böyle bir grup bulunamadı."
+    def GetGrup(id) -> dbMalzemeGruplariModel:
+        MalzemeGruplari: list[dbMalzemeGruplariModel] = DB.select("select * from MalzemeGruplari where id = '{}'".format(id))
+        assert len(MalzemeGruplari) == 1, "Böyle bir grup bulunamadı."
+        # TEST(">>>", MalzemeGruplari[0].id, MalzemeGruplari[0].GrupAdi)
+        return MalzemeGruplari[0]
+
+    MalzemeGrubu = GetGrup(Grupid)
     temp: list[GrupStratejilerModel] = []
-    for data in datalist:
-        y = GrupStratejilerModel('Maliyet',data.Maliyet)
-        temp.append(y.__dict__)
+    while True:
+        stratejiler: list[dbGrupStratejilerModel] = DB.select("select * from GrupStratejiler where GrupId = '{}'".format(MalzemeGrubu.id))
+        if len(stratejiler) == 1:
+            strateji = stratejiler[0]
+            y = GrupStratejilerModel('Maliyet', strateji.Maliyet)
+            temp.append(y.__dict__)
 
-        y = GrupStratejilerModel('Kalite',data.Kalite)
-        temp.append(y.__dict__)
+            y = GrupStratejilerModel('Kalite', strateji.Kalite)
+            temp.append(y.__dict__)
 
-        y = GrupStratejilerModel('Memnuniyet',data.Memnuniyet)
-        temp.append(y.__dict__)
+            y = GrupStratejilerModel('Memnuniyet', strateji.Memnuniyet)
+            temp.append(y.__dict__)
 
-        y = GrupStratejilerModel('Teslimat',data.Teslimat)
-        temp.append(y.__dict__)
-
-    return temp
+            y = GrupStratejilerModel('Teslimat', strateji.Teslimat)
+            temp.append(y.__dict__)
+            return temp
+        else:
+            MalzemeGrubu = GetGrup(MalzemeGrubu.UstGrupId)
 
 
 def PostStratejiBelirle(id, tip, data):

@@ -81,7 +81,7 @@ def TedarikciBilgi(stokkodu):
 
 def GetUrunStratejisi(stokkodu):
     DB()
-    _urun: list[dbUrunlerModel] = DB.select("select * from  where stokkodu = '{}'".format(stokkodu))
+    _urun: list[dbUrunlerModel] = DB.select("select * from Urunler where stokkodu = '{}'".format(stokkodu))
     assert len(_urun) == 1, "Aranılan stokkodu bulunamadı."
     grupId = _urun[0].GrupId
     import Business.GrupBusiness as GrupBus
