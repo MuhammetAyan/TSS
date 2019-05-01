@@ -97,14 +97,14 @@ def GetUstGruplar(Grupid):
         model = UstGrupModel(0, AnaGrup.GrupAdi)
         UstGruplar.append(model.__dict__)
         k = stratejiVarmi(0)
-        KalitimId = k if k != -1 else KalitimId
+        KalitimId = k if k != -1 and KalitimId == -1 else KalitimId
     else:
         grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
         assert grup is not None, "Böyle bir grup bulunamadı."
         model = UstGrupModel(grup.id, grup.GrupAdi)
         UstGruplar.append(model.__dict__)
         k = stratejiVarmi(grup.id)
-        KalitimId = k if k != -1 else KalitimId
+        KalitimId = k if k != -1 and KalitimId == -1 else KalitimId
         while GrupId != 0:
             grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
             ustGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(grup.UstGrupId)
@@ -112,7 +112,7 @@ def GetUstGruplar(Grupid):
             UstGruplar.append(model.__dict__)
             GrupId = ustGrup.id
             k = stratejiVarmi(ustGrup.id)
-            KalitimId = k if k != -1 else KalitimId
+            KalitimId = k if k != -1 and KalitimId == -1 else KalitimId
     UstGruplar.reverse()
     for gr in UstGruplar:
         if gr["id"] == KalitimId:
