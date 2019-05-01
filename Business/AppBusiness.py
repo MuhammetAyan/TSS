@@ -19,12 +19,15 @@ def OranGrafigi():
 
 
 def Optimizasyon():
-    stkkoduCur = DB.Cursor()
+    # stkkoduCur = DB.Cursor()
     DB()
     DB.query("delete from Sonuclar where 1=1")
-    stkkoduCur.start("select distinct stokkodu from UrunTedarikci")
-    while stkkoduCur.fetch():
-        StokKodu = stkkoduCur.val()[0]  # Bu stokkodu ile ilgili gruplama yapılacak.
+    StokKodlari: list = DB.select("select distinct stokkodu from UrunTedarikci", True)
+    # stkkoduCur.start("select distinct stokkodu from UrunTedarikci")
+    # while stkkoduCur.fetch():
+    for S in StokKodlari:
+        StokKodu = S[0]
+        # StokKodu = stkkoduCur.val()[0]  # Bu stokkodu ile ilgili gruplama yapılacak.
         # Aynı stokkoduna sahip çıkarımlar select ile getiriliyor.
         UrunTedarkiciler: list[dbUrunTedarikciModel] = DB.select("select * from UrunTedarikci where stokkodu = '{}'".format(StokKodu))
         tablo = []  # stokkodu ile ilgili tüm tedarikcilerin id ve kriter puanlarını tutar.
@@ -45,10 +48,19 @@ def Optimizasyon():
             tMatris.append(kriterDegerleri)
         # strateji tablosuna ait veriler
         urun: dbUrunlerModel = DB.select("select top 1 * from Urunler where stokkodu = '{}'".format(StokKodu))[0]
-
-        strateji: dbGrupStratejilerModel = DB.select("select top 1 * from GrupStratejiler where GrupId = '{}'".format(urun.GrupId))
+        strateji: list = UrunBusiness.GetUrunStratejisi(StokKodu)
+        # strateji: dbGrupStratejilerModel = DB.select("select top 1 * from GrupStratejiler where GrupId = '{}'".format(urun.GrupId))
         sMatris = []
-        sMatris.append([strateji.Kalite, strateji.Maliyet, strateji.Teslimat, strateji.Memnuniyet])
+
+        def getir(l: list, kriter: str):
+            for d in l:
+                if dict(d)["kriter"] == kriter:
+                    return dict(d)["val"]
+            return None
+        sMatris.append(getir(strateji, "Kalite"))
+        sMatris.append(getir(strateji, "Maliyet"))
+        sMatris.append(getir(strateji, "Teslimat"))
+        sMatris.append(getir(strateji, "Memnuniyet"))
         sonuclar = Ahp.SonCarpim(sMatris, tMatris)
         for ted in sonuclar:
             # sonuc = {'ted': /*Ahp Puani*/}
@@ -56,6 +68,6 @@ def Optimizasyon():
             model = dbSonuclarModel()
             model.StokKodu = StokKodu
             model.TedarikciId = ted
-            model.AHPPuan = sonuclar[ted]
-            model.AHPUyumSirasi = -1
+            model.AHPPuan = sonuclar[ted][0]
+            model.AHPUyumSirasi = sonuclar[ted][1]
             model.insert()

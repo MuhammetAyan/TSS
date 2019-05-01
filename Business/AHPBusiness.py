@@ -71,10 +71,26 @@ def SonCarpim(stratejiler, tedarikciler):
     :param tedarikciler: Her tedarikcinin id'si ve ilgili stok koduna ait kriter puanlarını içeren matris
     :return: tedarikciId ile indexlenmiş AHP puanı içeren sözlük
     """
+
+    def AhpPuaniSirala(sonuc: dict):
+        sira = 1
+        for k in sonuc:
+            enBuyukKey = None
+            for key in sonuc:
+                if enBuyukKey is None and sonuc[key][1] == -1:
+                    enBuyukKey = key
+                elif sonuc[key][1] == -1:
+                    if sonuc[key][0] > sonuc[enBuyukKey][0]:
+                        enBuyukKey = key
+            sonuc[enBuyukKey][1] = sira
+            sira += 1
+        return sonuc
+
     result = {}
     for tedarikci in tedarikciler:
         toplam = 0.
         for i in range(0, len(stratejiler)):
             toplam += stratejiler[i] * tedarikci[i + 1]  # TedarikciId den dolayı 1 kaydırdık.
-        result.update({tedarikci[0]: toplam})  # {'tedarikciId': /*AHP puani*/}
-    return result
+        result.update({tedarikci[0]: [toplam, -1]})  # {'tedarikciId': [/*AHP puani*/, /*AHP Sirasi*/]}
+    return AhpPuaniSirala(result)
+

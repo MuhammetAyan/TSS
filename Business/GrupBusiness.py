@@ -80,24 +80,43 @@ def GetUstGruplar(Grupid):
     :param Grupid:
     :return:
     """
+    KalitimId = -1
+
+    def stratejiVarmi(grupId):
+        global KalitimId
+        x = DB.select("select top 1 count(id) from GrupStratejiler where GrupId='{}'".format(grupId), True)[0][0]
+        if x == 1:
+            return grupId
+        else:
+            return -1
+
     UstGruplar: list[UstGrupModel] = []
     GrupId = Grupid
     if GrupId == 0:
         AnaGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
         model = UstGrupModel(0, AnaGrup.GrupAdi)
         UstGruplar.append(model.__dict__)
+        k = stratejiVarmi(0)
+        KalitimId = k if k != -1 else KalitimId
     else:
         grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
         assert grup is not None, "Böyle bir grup bulunamadı."
         model = UstGrupModel(grup.id, grup.GrupAdi)
         UstGruplar.append(model.__dict__)
+        k = stratejiVarmi(grup.id)
+        KalitimId = k if k != -1 else KalitimId
         while GrupId != 0:
             grup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(GrupId)
             ustGrup: dbMalzemeGruplariModel = dbMalzemeGruplariModel.select(grup.UstGrupId)
             model = UstGrupModel(ustGrup.id, ustGrup.GrupAdi)
             UstGruplar.append(model.__dict__)
             GrupId = ustGrup.id
+            k = stratejiVarmi(ustGrup.id)
+            KalitimId = k if k != -1 else KalitimId
     UstGruplar.reverse()
+    for gr in UstGruplar:
+        if gr["id"] == KalitimId:
+            gr["kalitim"] = True
     return UstGruplar
 
 
