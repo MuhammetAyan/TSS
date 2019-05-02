@@ -75,3 +75,15 @@ def StratejiBelirle():
     else:
         UnauthorizedError()
 
+
+@get("strateji/usttenkalitimal/<grupId: int>")
+def UsttenKalitimAl(grupId):
+    if IsAllow(request, Roller.Admin):
+        try:
+            GrupBusiness.UsttenKalitimAl(grupId)
+        except AssertionError as hata:
+            UserError(hata.__str__())
+        except Exception as hata:
+            FailedError()
+    else:
+        UnauthorizedError()

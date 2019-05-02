@@ -198,3 +198,12 @@ def PostStratejiBelirle(id, tip, data):
     elif tip == 'ürün':
         # Burası sonradan eklenecek. Şu anlık hata vermeye ayarlandı.
         raise ValueError()
+
+
+def UsttenKalitimAl(grupId):
+    """
+    Bir grubun kendi stratejisi yoksa üstten kalıtım alıyor demektir. Yani bu fonksiyon grubun stratejisini siler.
+    :param grupId: Stratejisi silinecek grubun id'si
+    :return:
+    """
+    DB.query("delete GrupStratejiler from where id = '{}'".format(grupId))
