@@ -1,5 +1,5 @@
-debug = True
-mobileTest = True
+debug = False
+mobileTest = False
 
 
 def TEST(*values):

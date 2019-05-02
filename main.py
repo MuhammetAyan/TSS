@@ -5,11 +5,8 @@ from Controllers.testController import *
 from Controllers.GrupStratejiController import *
 from Controllers.TedarikciSorguController import *
 
-debug(False)
+from Network.bottle import run
 
-from Network.runserver import runserver
 from socket import gethostbyname, gethostname
 
-
-runserver(gethostbyname(gethostname()), 8080)
-
+run(host=gethostbyname(gethostname()), port=8080, debug=False)

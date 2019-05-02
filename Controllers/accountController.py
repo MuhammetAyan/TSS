@@ -1,4 +1,4 @@
-from Network.bottle import * # route, post, static_file, response, json_dumps
+from Network.bottle import route, post, response, json_dumps
 from Business.AccountBusiness import FindLogin, dbKullanicilarModel
 from Network.Security import *
 from Test import TEST
