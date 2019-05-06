@@ -1,5 +1,12 @@
+USE [TSSDB]
+GO
+/****** Object:  Trigger [dbo].[deneme]    Script Date: 6.05.2019 16:33:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
-create trigger deneme on Malkabul
+ALTER trigger [dbo].[deneme] on [dbo].[MalKabul]
 for insert
 as
 begin
@@ -11,7 +18,7 @@ declare
 		select @KaliteKS = isnull((select FloatDeger from Ayarlar where Anahtar ='KaliteKS' ),0.5)
 		select @TeslimatKS = isnull((select FloatDeger from Ayarlar where Anahtar ='TeslimatKS' ),0.5)
 		select @MemnuniyetKS = isnull((select FloatDeger from Ayarlar where Anahtar ='MemnuniyetKS' ),0.5)
-		  
+		
 		 
 	    create table #TempGruplaStokKodTed([StokKodu] varchar(10), [TedarikciId] int , [MaliyetPuan] smallint , [KalitePuan] smallint, 
 			 								[TeslimatPuan] smallint, [MemnuniyetPuan] smallint, [Adet] int) 
@@ -34,44 +41,45 @@ declare
   --  select * from #Temp 
 --	 --return
 
---Deðiþkenlerin tanýmlanmasý iþlemi
-DECLARE 
- 	@StokKodu varchar(10), @TedId int ,@MaliyetPuan smallint , @KalitePuan smallint, 
- 	@TeslimatPuan smallint, @MemnuniyetPuan smallint,@Adet int
+--Deï¿½iï¿½kenlerin tanï¿½mlanmasï¿½ iï¿½lemi
 
---En dýþtaki cursor'un tanýmlanmasý iþlemi
+DECLARE 
+ 	@StokKodu varchar(10), @TedId int ,@MaliyetPuan float , @KalitePuan float, 
+ 	@TeslimatPuan float, @MemnuniyetPuan float,@Adet int
+
+--En dï¿½ï¿½taki cursor'un tanï¿½mlanmasï¿½ iï¿½lemi
 DECLARE CursorStokKodu CURSOR
 FOR
      select distinct StokKodu   
 	 from #TempGruplaStokKodTed  
 	  
---Cursor'un açýlmasý iþlemi (En dýþtaki)
+--Cursor'un aï¿½ï¿½lmasï¿½ iï¿½lemi (En dï¿½ï¿½taki)
 OPEN CursorStokKodu
---Cursor ile satýr satýr CursorStokKodu içinde gezinip stokkodu deðerlerinin alýnmasý
+--Cursor ile satï¿½r satï¿½r CursorStokKodu iï¿½inde gezinip stokkodu deï¿½erlerinin alï¿½nmasï¿½
 FETCH NEXT FROM CursorStokKodu INTO @StokKodu
---Döngü baþlýyor
+--Dï¿½ngï¿½ baï¿½lï¿½yor
 WHILE @@FETCH_STATUS = 0
  BEGIN
-	   --Ýçteki cursor'un tanýmlanmasý iþlemi
+	   --ï¿½ï¿½teki cursor'un tanï¿½mlanmasï¿½ iï¿½lemi
         DECLARE CursorTedId CURSOR FOR
-		    --Cursor ile sotokkodu deðerinin dýþtaki sorgudan alýnýp içeride dönülmesi iþlemi
+		    --Cursor ile sotokkodu deï¿½erinin dï¿½ï¿½taki sorgudan alï¿½nï¿½p iï¿½eride dï¿½nï¿½lmesi iï¿½lemi
             SELECT  TedarikciId,MaliyetPuan,KalitePuan, TeslimatPuan, MemnuniyetPuan, Adet
             FROM  #TempGruplaStokKodTed
             WHERE   StokKodu = @StokKodu
 
-         --Cursor'un açýlmasý iþlemi (Ýçteki)
+         --Cursor'un aï¿½ï¿½lmasï¿½ iï¿½lemi (ï¿½ï¿½teki)
         OPEN CursorTedId
-		--Burada cursor içeride stokkoda göre dönüp tedidyi alýyor.
+		--Burada cursor iï¿½eride stokkoda gï¿½re dï¿½nï¿½p tedidyi alï¿½yor.
         FETCH NEXT FROM CursorTedId INTO @TedId,@MaliyetPuan , @KalitePuan , @TeslimatPuan , @MemnuniyetPuan ,@Adet
-		--Döngü baþlýyor
+		--Dï¿½ngï¿½ baï¿½lï¿½yor
      WHILE @@FETCH_STATUS = 0
          BEGIN
 
-			--yaþ alg burda yapýlcak
+			--yaï¿½ alg burda yapï¿½lcak
 
 			if(exists(select * from UrunTedarikci where StokKodu =@StokKodu and TedarikciId = @TedId))
 			begin
-				declare @Ortid int, @OrtMaliyet smallint , @OrtKalite smallint, @OrtTeslimat smallint ,@OrtMaliyetAgirlik float,
+				declare @Ortid int, @OrtMaliyet float , @OrtKalite float, @OrtTeslimat float ,@OrtMaliyetAgirlik float,
 						@OrtKaliteAgirlik float ,@OrtTeslimatAgirlik float, @OrtAdetE float
 				
 				select @Ortid=id, @OrtMaliyet =MaliyetPuan, @OrtKalite=KalitePuan, @OrtTeslimat=TeslimatPuan ,
@@ -80,16 +88,16 @@ WHILE @@FETCH_STATUS = 0
 
 					set @OrtAdetE = @OrtMaliyetAgirlik 
 					set @OrtMaliyetAgirlik = @OrtAdetE * @MaliyetKS +1
-			   		set @OrtMaliyet = (@OrtMaliyet * @OrtMaliyetAgirlik * @MaliyetKS + @MaliyetPuan)/(@OrtMaliyetAgirlik)
+			   		set @OrtMaliyet = (@OrtMaliyet * @OrtAdetE * @MaliyetKS + @MaliyetPuan)/(@OrtMaliyetAgirlik)
 
 					
 					set @OrtAdetE = @OrtKaliteAgirlik 
 					set @OrtKaliteAgirlik = @OrtAdetE * @KaliteKS +1
-			   		set @OrtKalite = (@OrtKalite * @OrtKaliteAgirlik * @KaliteKS + @KalitePuan)/(@OrtKaliteAgirlik)
+			   		set @OrtKalite = (@OrtKalite * @OrtAdetE * @KaliteKS + @KalitePuan)/(@OrtKaliteAgirlik)
 					
 					set @OrtAdetE = @OrtTeslimatAgirlik 
 					set @OrtTeslimatAgirlik = @OrtAdetE * @TeslimatKS +1
-			   		set @OrtTeslimat = (@OrtTeslimat * @OrtTeslimatAgirlik * @TeslimatKS + @TeslimatPuan)/(@OrtTeslimatAgirlik)
+			   		set @OrtTeslimat = (@OrtTeslimat * @OrtAdetE * @TeslimatKS + @TeslimatPuan)/(@OrtTeslimatAgirlik)
 
 					update UrunTedarikci set MaliyetPuan=@OrtMaliyet  , KalitePuan= @OrtKalite , TeslimatPuan= @OrtTeslimat ,MaliyetAgirlik= @OrtMaliyetAgirlik ,
 											KaliteAgirlik= @OrtKaliteAgirlik  ,TeslimatAgirlik= @OrtTeslimatAgirlik 
@@ -103,29 +111,28 @@ WHILE @@FETCH_STATUS = 0
 
 			end
 				
-			-- bu satýrdan aþþasý tedarikci tablosuna ( tedid2 ler tedarikci tablosundaki id alaný o satýra update çekmek için aþþada kullanýcaz) 
-				declare @TedId2 int, @TedMemnuniyet smallint ,@TedMemnuniyetAgirlik float,@TedAdetE float
+			-- bu satï¿½rdan aï¿½ï¿½asï¿½ tedarikci tablosuna ( tedid2 ler tedarikci tablosundaki id alanï¿½ o satï¿½ra update ï¿½ekmek iï¿½in aï¿½ï¿½ada kullanï¿½caz) 
+				declare @TedId2 int, @TedMemnuniyet float ,@TedMemnuniyetAgirlik float,@TedAdetE float
 				
-				select @TedId2=id, @TedMemnuniyet =Memnuniyet, @TedMemnuniyetAgirlik=MemnuniyetAgirlik--tabloda onceden olan kayýtlarý aldýk
+				select @TedId2=id, @TedMemnuniyet =Memnuniyet, @TedMemnuniyetAgirlik=MemnuniyetAgirlik--tabloda onceden olan kayï¿½tlarï¿½ aldï¿½k
 					from Tedarikci where id = @TedId	
 				
-				 set @TedAdetE = @TedMemnuniyetAgirlik  --aldýmýz kayýtlara yaþlandýrma alg uyguladýk
+				 set @TedAdetE = @TedMemnuniyetAgirlik  --aldï¿½mï¿½z kayï¿½tlara yaï¿½landï¿½rma alg uyguladï¿½k
 				 set @TedMemnuniyetAgirlik = @TedAdetE * @MemnuniyetKS +1
-			     set @TedMemnuniyet = (@TedMemnuniyet * @TedMemnuniyetAgirlik * @MemnuniyetKS + @MemnuniyetPuan)/(@TedMemnuniyetAgirlik)
-
-				 update Tedarikci set Memnuniyet=@TedMemnuniyet  , MemnuniyetAgirlik= @TedMemnuniyetAgirlik -- hesaplanmýþ verileri update çektik
+			     set @TedMemnuniyet = (@TedMemnuniyet * @TedAdetE * @MemnuniyetKS + @MemnuniyetPuan)/(@TedMemnuniyetAgirlik)
+				 update Tedarikci set Memnuniyet=@TedMemnuniyet  , MemnuniyetAgirlik= @TedMemnuniyetAgirlik -- hesaplanmï¿½ï¿½ verileri update ï¿½ektik
 				   where id=@TedId2
 				-- tedid2 ler tedarikci tablosu	   
 
                 FETCH NEXT FROM CursorTedId INTO @TedId,@MaliyetPuan , @KalitePuan , @TeslimatPuan , @MemnuniyetPuan ,@Adet
             END
 
-	    --Ýçteki cursor'un kapatýlmasý
+	    --ï¿½ï¿½teki cursor'un kapatï¿½lmasï¿½
         CLOSE CursorTedId;
         DEALLOCATE CursorTedId;
         FETCH NEXT FROM CursorStokKodu INTO @StokKodu
  END
---Dýþtaki cursor'un kapatýlmasý
+--Dï¿½ï¿½taki cursor'un kapatï¿½lmasï¿½
 CLOSE CursorStokKodu;
 DEALLOCATE CursorStokKodu;
  
@@ -133,14 +140,14 @@ DEALLOCATE CursorStokKodu;
 end
 
 
+--
+--
+--delete from UrunTedarikci
+--delete from MalKabul
+--update Tedarikci set Memnuniyet = 50, MemnuniyetAgirlik=1
+--
+-- insert into Malkabul ([StokKodu], [TedarikciId], [MaliyetPuan], [KalitePuan], [TeslimatPuan], [MemnuniyetPuan], [Tarih], [Adet]  )
+-- values ('D002',2 ,10,100,10,50,null,40),('D002',1,70,100,100,100,null,30),
+--  ('P01',3 ,90,80,100,0,null,40),('D001',3,90,80,100,0,null,30),
+--   ('D003',3 ,90,80,50,50,null,40),('D001',2,90,80,50,50,null,30)
 
-
-
-
- insert into Malkabul ([StokKodu], [TedarikciId], [MaliyetPuan], [KalitePuan], [TeslimatPuan], [MemnuniyetPuan], [Tarih], [Adet]  ) 
- values ('D002',3 ,90,80,100,0,'2019-04-20 00:00:00',40),('D001',1,70,80,100,0,'2019-04-20 00:00:00',30),
-  ('P01',3 ,90,80,100,0,'2019-04-20 00:00:00',40),('D001',3,90,80,100,0,'2019-04-20 00:00:00',30),
-   ('D001',3 ,90,80,50,50,'2019-04-20 00:00:00',40),('D001',3,90,80,50,50,'2019-04-20 00:00:00',30),
-    ('P01',3 ,90,80,100,0,'2019-04-20 00:00:00',40),('P01',3,90,80,100,80,'2019-04-20 00:00:00',30),
-	 ('D001',3 ,90,80,50,50,'2019-04-20 00:00:00',40),('P01',2,90,80,100,50,'2019-04-20 00:00:00',30),
-	 ('P01',3 ,90,80,100,0,'2019-04-20 00:00:00',40),('P01',2,90,80,100,10,'2019-04-20 00:00:00',30)
