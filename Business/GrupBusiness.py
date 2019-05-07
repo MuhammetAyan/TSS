@@ -206,4 +206,4 @@ def UsttenKalitimAl(grupId):
     :param grupId: Stratejisi silinecek grubun id'si
     :return:
     """
-    DB.query("delete GrupStratejiler from where id = '{}'".format(grupId))
+    DB.query("DELETE FROM GrupStratejiler WHERE GrupId='{}'".format(grupId))

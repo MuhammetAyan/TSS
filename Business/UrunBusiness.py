@@ -60,15 +60,11 @@ def TedarikciBilgi(stokkodu):
     Tedarikci: list[dbTedarikUrunleriModel] = DB.select("select * from TedarikUrunleri where StokKodu = '{}'".format(stokkodu))
 
     TedarikciBilgi : list[tbm.UrunTedarikciBilgileriModel] = []
-
+    DefTedId = DB.select("select DefTedId from Urunler where Stokkodu = '{}'".format(stokkodu), True)
     for Ted in Tedarikci:
-        DefTedId = DB.select("select DefTedId from Urunler where Stokkodu = '{}'".format(stokkodu),True)
-
         Tedid = Ted.TedarikciId
-
-        TedAdi = DB.select("select TedarikciAdi from Tedarikci where id = '{}'".format(Tedid),True)
-
-        TedAhpPuan = DB.select("select AHPPuan from sonuclar where StokKodu = '{}'".format(Ted.StokKodu),True)
+        TedAdi = DB.select("select TedarikciAdi from Tedarikci where id = '{}'".format(Tedid), True)
+        TedAhpPuan = DB.select("select AHPPuan from sonuclar where StokKodu = '{}' and TedarikciId = {}".format(Ted.StokKodu, Ted.TedarikciId), True)
         TedAhpPuan=TedAhpPuan[0][0] if len(TedAhpPuan) > 0 else 0
 
         Default = Tedid == DefTedId[0][0]

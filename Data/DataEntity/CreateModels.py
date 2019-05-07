@@ -1,4 +1,4 @@
-from Data.DBConnect import DB
+from ..DBConnect import DB
 
 
 def CreateModels():

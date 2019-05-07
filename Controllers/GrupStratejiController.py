@@ -76,7 +76,7 @@ def StratejiBelirle():
         UnauthorizedError()
 
 
-@get("strateji/usttenkalitimal/<grupId: int>")
+@get("strateji/usttenkalitimal/<grupId>")
 def UsttenKalitimAl(grupId):
     if IsAllow(request, Roller.Admin):
         try:

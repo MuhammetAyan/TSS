@@ -1,4 +1,4 @@
-from Network.bottle import abort, request, response
+from .bottle import abort, request, response
 import secrets
 from threading import Thread, Event
 from Test import TEST
