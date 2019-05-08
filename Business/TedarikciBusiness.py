@@ -45,10 +45,10 @@ def TedarikciUrunleri(tedarikciId):   #burada urunid yerine stok kodunu geri dö
         # AhpPuan = Sonuclar[0].AHPPuan if AhpPuan > 0 else 0
         # AhpSira = Sonuclar[0].AHPUyumSirasi if len(AhpSira) > 0 else 0
 
-        AhpPuan= DB.select("select AHPPuan from sonuclar where TedarikciId = '{}'".format(tedarikciId),True)
+        AhpPuan= DB.select("select AHPPuan from sonuclar where TedarikciId = '{}' and StokKodu = '{}'".format(tedarikciId, StokKodu), True)
         AhpPuan= AhpPuan[0][0] if len(AhpPuan) > 0 else 0
 
-        AhpSira= DB.select("select AHPUyumSirasi from sonuclar where TedarikciId = '{}'".format(tedarikciId),True)
+        AhpSira= DB.select("select AHPUyumSirasi from sonuclar where TedarikciId = '{}' and StokKodu = '{}'".format(tedarikciId, StokKodu), True)
         AhpSira= AhpSira[0][0] if len(AhpSira) > 0 else 0
 
         Default = DefTedId == tedarikciId
@@ -56,7 +56,7 @@ def TedarikciUrunleri(tedarikciId):   #burada urunid yerine stok kodunu geri dö
         x = tum.TedarikciUrunleriModel(StokKodu,UrunAdi,AhpPuan,AhpSira,Default)
         TedarikciUrunleriListe.append(x.__dict__)
 
-    return TedarikciUrunleriListe
+    return sorted(TedarikciUrunleriListe, key=lambda y: y['AHPSira'])
 
 
 

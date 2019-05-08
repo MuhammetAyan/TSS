@@ -69,10 +69,10 @@ def TedarikciBilgi(stokkodu):
 
         Default = Tedid == DefTedId[0][0]
 
-        x = tbm.UrunTedarikciBilgileriModel(Tedid,TedAdi[0][0],TedAhpPuan,Default)
+        x = tbm.UrunTedarikciBilgileriModel(Tedid, TedAdi[0][0], TedAhpPuan, Default)
         TedarikciBilgi.append(x.__dict__)
 
-    return TedarikciBilgi
+    return sorted(TedarikciBilgi, key=lambda y: y['ahp'], reverse=True)
 
 
 def GetUrunStratejisi(stokkodu):

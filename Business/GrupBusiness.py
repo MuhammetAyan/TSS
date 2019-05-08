@@ -19,7 +19,7 @@ def getGruplar(ustGrupid):
         if data.id != 0:
             x = GrupModel(data.id, data.GrupAdi)
             temp.append(x.__dict__)
-    return temp
+    return sorted(temp, key=lambda y: y['grupadi'])
 
 
 def GetGrupStratejiOran(Grupid):
