@@ -96,7 +96,7 @@ class UsersVarible:
         self.username = username
         self.key = key
         self.rol = rol
-        self.time = 60 * 5
+        self.time = 60 * 15
         __UsersVaribles__.append(self)
 
     def delete(self):
@@ -108,7 +108,7 @@ class UsersVarible:
         Kullanıcının açık kalma süresini yeniden hesaplar.
         :return:
         """
-        self.time = 60 * 5
+        self.time = 60 * 15
 
 
 def DeleteUser(key):

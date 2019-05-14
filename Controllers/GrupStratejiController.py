@@ -59,7 +59,7 @@ def GrupStrateji(grupId):
 
 @post('/strateji/belirle')
 def StratejiBelirle():
-    if IsAllow(request, Roller.TumHesaplar):
+    if IsAllow(request, Roller.Admin):
         try:
             id = request.json.get("id")
             assert id is not None, "id bilgisi girilmemiş."
@@ -76,7 +76,7 @@ def StratejiBelirle():
         UnauthorizedError()
 
 
-@get("strateji/usttenkalitimal/<grupId>")
+@get("/strateji/usttenkalitimal/<grupId:int>")
 def UsttenKalitimAl(grupId):
     if IsAllow(request, Roller.Admin):
         try:

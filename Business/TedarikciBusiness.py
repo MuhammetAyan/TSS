@@ -10,7 +10,7 @@ def TedarikciSorgula(arama):
     :return:
     """
     TedarikciListesi : list[tm.TedarikciModel] =[]
-    Tedarikciler : list[dbTedarikciModel] = DB.select("select * from Tedarikci where TedarikciAdi like '{}%'".format(arama))
+    Tedarikciler : list[dbTedarikciModel] = DB.select("select * from Tedarikci where TedarikciAdi like '%{}%'".format(arama))
 
     for Tedarikci in Tedarikciler:
 
