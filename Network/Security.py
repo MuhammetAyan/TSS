@@ -15,9 +15,7 @@ class Rol:
 
     def __add__(self, other):
         R = Rol()
-        R.roles = self.roles
-        R.roles.__add__(other.roles)
-        R.roles = list(set(R.roles))
+        R.roles = self.roles + list(other.roles)
         return R
 
 
