@@ -1,0 +1,10 @@
+# Aralık tanımlayın
+# 0-10 arası değerlere isim vererek kullanabilirsiniz.
+0-2     ckotu
+2-4     kotu
+4-6     orta
+7-8     iyi
+9-10    ciyi
+0-10    karma
+0-5     kkotu
+5-10    kiyi

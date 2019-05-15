@@ -1,0 +1,4 @@
+# Maliyet   Kalite  Teslimat    Memnuniyet
+# Değerler 0-10 arası konulacak.
+ckotu   iyi  kiyi  orta
+
